@@ -36,7 +36,6 @@ Development takes place @ c9.io, and this make it easy to collaborate with other
 5. use a ternimal tab to navigate to folder "node-server" and run "npm install" as this will download some things it need to serv the content
 6. from the node-server directory, run "node index.js" as this will run the app.
 
-
-1. with node-webkit running on you 'windows computer', open the "app/index.js" file and fix the window.location path to your running path... 
-2. run "start.bat" 
+7. with node-webkit running on you 'windows computer', open the "app/index.js" file and fix the window.location path to your running path... 
+8. run "start.bat" 
 
