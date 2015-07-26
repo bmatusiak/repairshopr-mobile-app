@@ -42,6 +42,10 @@ define(function () {
         
         settingsList.manager.parent(imports.mainLayout.mainPage.manager);
         
+        settingsList.on("show",function(){
+            settingsList.manager.emit("setup");
+        });
+        
         pluginEvents.addSetting = function(settingName,settingAbbr){
             //add location id to settings panel
             settingsList.manager.emit("addItem",function(){
