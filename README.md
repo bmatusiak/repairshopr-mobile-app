@@ -39,3 +39,4 @@ Development takes place @ c9.io, and this make it easy to collaborate with other
 7. with node-webkit running on you 'windows computer', open the "app/index.js" file and fix the window.location path to your running path... 
 8. run "start.bat" 
 
+if every thing is working then start coding.
