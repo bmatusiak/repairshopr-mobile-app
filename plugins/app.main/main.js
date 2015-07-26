@@ -24,13 +24,23 @@ define(function() {
         var ticketsList = imports.tickets.ticketsListLayout;
         ticketsList.manager.parent(mainPage.manager);
         
-        
+        window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
+                var popup = $( "<div/>" );
+                popup.popup();
+                popup.html("<h1>Error occured</h1><hr/> " + errorMsg + "<br>" + "["+lineNumber+"]"+url);
+                popup.popup("open");
+                return false;
+            };
+            
         try{
             //This is for droidscript
             var s = document.createElement("script");
             s.type = "text/javascript";
             s.src = "file:///android_asset/app.js";
-            $("head").append(s);
+            s.onerror = function(){
+                return true;
+            };
+            (document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(s);
             if(app){
                 app.EnableBackKey(false);
                 window.OnBack = function(){
@@ -39,8 +49,17 @@ define(function() {
                     });
                 };
                 console.log("back key disabled");
+                
+                window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
+                    var popup = $( "<div/>" );
+                    popup.popup();
+                    popup.html("<h1>Error occured</h1><hr/> " + errorMsg + "<br>" + "["+lineNumber+"]"+url);
+                    popup.popup("open");
+                    return true;
+                };
+                
             }
-        }catch(e){}
+        }catch(e){ }
         
         register(null,{main:{
             start:function(){

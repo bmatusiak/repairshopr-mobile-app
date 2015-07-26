@@ -3,7 +3,7 @@ define(function() {
 
     plugin.provides = ["customers"];
 
-    plugin.consumes = ["factory", "settings","mainLayout"];
+    plugin.consumes = ["factory", "settings","mainLayout","api"];
 
     return plugin;
 
@@ -45,7 +45,7 @@ define(function() {
 
         customersList.manager.on("show", function(keepData) {
             if (!keepData) {
-
+        
             }
         });
 
@@ -57,6 +57,9 @@ define(function() {
         });
         
 
+        //customersList.manager.parent(imports.mainLayout.mainPage.manager);
+        //customerView.manager.parent(imports.mainLayout.mainPage.manager);
+        
 
         register(null, {
             customers: {
