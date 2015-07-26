@@ -48,6 +48,6 @@ Device Testing
 
 Current device testing is done on "Droidscript" android
 
-the main plan is to be able for the to be converted to phonegap (adobe's way to build for Android + iOS @ same time),
+the main plan is to convert to phonegap (adobe's way to build for Android + iOS @ same time),
 
 but as of currently "droidscript" is the best way to go without any overhead from phonegap, for now
