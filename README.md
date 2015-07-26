@@ -10,11 +10,8 @@ This app uses
 *  requirejs
 
 
----
-
 Running the project
 ---
-------
 
 to get started, download the project [here](https://github.com/bmatusiak/repairshopr-mobile-app/archive/master.zip)
 
@@ -25,13 +22,10 @@ This will open node webkit pointing local directory.
 
 *if you use any web browser, you wont be allowd to login to repairshopr-mobile-app*
 
----
-
 
 Developing the project
 ----
 
-----
 
 Development takes place @ c9.io, and this make it easy to collaborate with others when asking for help, you will have to know some linux terminal commands
 
