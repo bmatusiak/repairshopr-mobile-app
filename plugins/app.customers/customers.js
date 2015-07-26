@@ -57,8 +57,8 @@ define(function() {
         });
         
 
-        //customersList.manager.parent(imports.mainLayout.mainPage.manager);
-        //customerView.manager.parent(imports.mainLayout.mainPage.manager);
+        customersList.manager.parent(imports.mainLayout.mainPage.manager);
+        customerView.manager.parent(imports.mainLayout.mainPage.manager);
         
 
         register(null, {
