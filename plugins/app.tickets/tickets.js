@@ -207,8 +207,6 @@ define(function() {
             }
             else locationTickets = tickets;
 
-            console.log(locationTickets);
-
             for (var j in locationTickets) {
                 var ticket = locationTickets[j];
                 ticketsList.itemData[ticket.number] = ticket;
