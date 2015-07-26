@@ -1,8 +1,7 @@
 # repairshopr-mobile-app
 repairshopr-mobile-app is a app that only uses the api, and can be converted into a device app
 
-This app uses 
-
+__This app uses __
 *  jQuery
 *  JQuery Mobile
 *  c9.io architect
