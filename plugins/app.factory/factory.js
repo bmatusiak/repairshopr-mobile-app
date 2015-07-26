@@ -121,7 +121,6 @@ define(["events"], function(events) {
                 var id = args.shift();
                 args.unshift("hide");
                 if (layoutChildren[id]) {
-                    console.log("Hideing child - " + id);
                     layoutChildren[id].hide();
 
                     if (layoutChildren[id].manager)
@@ -136,7 +135,6 @@ define(["events"], function(events) {
                 args.unshift("show");
                 var child = layoutChildren[id];
                 if (child) {
-                    console.log("Showing child - " + id);
                     child.show();
                     if (child.manager)
                         child.manager.emit.apply(layoutChildren[id].manager, args);

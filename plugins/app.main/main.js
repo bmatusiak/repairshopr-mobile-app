@@ -26,6 +26,11 @@ define(function() {
         
         
         try{
+            //This is for droidscript
+            var s = document.createElement("script");
+            s.type = "text/javascript";
+            s.src = "file:///android_asset/app.js";
+            $("head").append(s);
             if(app){
                 app.EnableBackKey(false);
                 window.OnBack = function(){
@@ -33,6 +38,7 @@ define(function() {
                         if(isEnd) app.Exit();
                     });
                 };
+                console.log("back key disabled");
             }
         }catch(e){}
         
