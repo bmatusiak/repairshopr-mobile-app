@@ -46,7 +46,7 @@ if every thing is working then start coding.
 Device Testing
 ----
 
-Current device testing id done on "Droidscript" android
+Current device testing is done on "Droidscript" android
 
 the main plan is to be able for the to be converted to phonegap,
 
