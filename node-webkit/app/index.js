@@ -1,0 +1,1 @@
+window.location = "https://github-raw-relay.herokuapp.com/bmatusiak/repairshopr-mobile-app/master/index.html";
