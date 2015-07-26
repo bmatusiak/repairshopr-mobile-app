@@ -1,0 +1,230 @@
+/* globals app*/
+define(["events"], function(events) {
+    var EventEmitter = events.EventEmitter;
+
+    plugin.provides = ["factory"];
+
+    return plugin;
+
+    function plugin(options, imports, register) {
+        
+        function parentAble(child){
+            return function(Parent) {
+                if(Parent && !child.manager.getParent){
+                    if(child.manager && child.manager.id)
+                        Parent.emit("addChild", child.manager.id, child);
+                    
+                    child.manager.emit("addParent", Parent);
+                    child.manager.getParent = function(){
+                        return Parent;
+                    }
+                }
+                return child.manager.getParent();
+            };
+        }
+        var CreateList = function(id, listView) {
+            
+            var parent;
+            var itemsList = [];
+            var listEvents = new EventEmitter();
+
+            listEvents.id = id;
+            listView.manager = listEvents;
+            listEvents.parent = parentAble(listView);
+            
+            listEvents.on("addParent",function(Parrent){
+                parent = Parrent;
+            });
+            
+            listEvents.on("setup", function() {
+                listView.html("");
+                for (var i = 0; i < itemsList.length; i++) {
+                    itemsList[i]();
+                }
+                listView.listview('refresh');
+            });
+            
+            listEvents.on("addItem", function(itemName, onClick, noSetup) {
+                var itemNameFn = function() {
+                        if (typeof itemName == "function")
+                            return itemName();
+                        else return itemName;
+                    };
+                itemsList.push(function() {
+                    var body = $("<p/>");
+                    body.css("text-overflow" , "initial");
+                    body.css("overflow" , "initial");
+                    body.css("white-space" , "initial");
+                    
+                    var data = itemNameFn();
+                    if(typeof data == "object")
+                        body.append(data);
+                    else
+                        body.html(data);
+                    listView.append($("<li/>",{
+                        "data-icon":(onClick ? undefined : false)
+                    }).append($("<a/>").click(onClick).html(body)));
+                });
+                if(!noSetup)
+                    listEvents.emit("setup");
+            });
+
+            listEvents.on("clear", function() {
+                listView.html("");
+                itemsList = [];
+            });
+
+
+            listEvents.on("show", function() {
+                listView.show();
+            });
+
+            
+            listEvents.show = function() {
+                var args = argsToArr(arguments);
+                args.unshift(listView.manager.id);
+                args.unshift("next");
+                parent.emit.apply(parent, args);
+            };
+            return listEvents;
+        };
+
+
+        var ManageContainer = function(id, layout) {
+
+            var layoutChildren = {};
+            
+            var layoutEvents = new EventEmitter();
+            layoutEvents.id = id;
+            layout.manager = layoutEvents;
+
+            layoutEvents.parent = parentAble(layout);
+
+            layoutEvents.on("addChild", function(id, child) {
+                layout.append(child);
+                layoutChildren[id] = child;
+                child.hide();
+
+                if (child.manager) {
+                    child.manager.emit("add", layout);
+                }
+            });
+
+            layoutEvents.on("hideChildren", function() {
+                for (var i in layoutChildren) {
+                    layoutEvents.emit("hideChild", i);
+                }
+            });
+
+            layoutEvents.on("hideChild", function() {
+                var args = argsToArr(arguments);
+                var id = args.shift();
+                args.unshift("hide");
+                if (layoutChildren[id]) {
+                    console.log("Hideing child - " + id);
+                    layoutChildren[id].hide();
+
+                    if (layoutChildren[id].manager)
+                        layoutChildren[id].manager.emit.apply(layoutChildren[id].manager, args);
+                }
+            });
+
+
+            layoutEvents.on("showChild", function() {
+                var args = argsToArr(arguments);
+                var id = args.shift();
+                args.unshift("show");
+                var child = layoutChildren[id];
+                if (child) {
+                    console.log("Showing child - " + id);
+                    child.show();
+                    if (child.manager)
+                        child.manager.emit.apply(layoutChildren[id].manager, args);
+                }
+            });
+
+        };
+
+
+        var ManagePage = function(id, layout) {
+
+            var currentView = null;
+            var viewOrder = [];
+
+            var layoutEvents = layout.manager;
+
+            layoutEvents.on("start", function(id) {
+                layoutEvents.emit("reset");
+                layoutEvents.emit("showChild", id);
+                currentView = id;
+            });
+
+            layoutEvents.on("back", function(callback) {
+                var id = viewOrder.pop();
+                if (!id) {
+                    if (callback) callback(true);
+                }
+                else {
+                    //layoutEvents.emit("hideChildren");
+                    //layoutEvents.emit("showChild", id,true);
+                    currentView = false;
+                    layoutEvents.emit("next", id, true);
+                }
+            });
+
+            layoutEvents.on("next", function(id, keepdata) {
+                if (currentView)
+                    viewOrder.push(currentView);
+                currentView = id;
+                layoutEvents.emit("hideChildren");
+
+
+                var args = argsToArr(arguments);
+                args.unshift("showChild");
+                layoutEvents.emit.apply(layoutEvents, args);
+            });
+
+
+            layoutEvents.on("reset", function() {
+                currentView = null;
+                viewOrder = [];
+                layoutEvents.emit("hideChildren");
+            });
+
+        };
+
+        function argsToArr(args) {
+            var arr = [];
+            for (var i = 0; i < args.length; i++) {
+                arr.push(args[i]);
+            }
+            return arr;
+        }
+
+        register(null, {
+            factory: {
+                managePage: function(container) {
+                    var $container = $(container);
+                    ManageContainer(container, $container);
+                    ManagePage(container, $container);
+                    return $container;
+                },
+                createList: function() {
+                    var args = argsToArr(arguments);
+                    var id = args.shift();
+                    args[0] = "";
+                    var listView = $("<ul/>",{id:id});
+
+                    listView.listview({
+                        defaults: true
+                    });
+
+                    listView.manager = CreateList(id, listView);
+
+                    return listView;
+                }
+            }
+        });
+    }
+
+});
