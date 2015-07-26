@@ -9,7 +9,7 @@ This app uses
 *  nodejs's events lib
 *  requirejs
 
-__Development stuff_
+__Development stuff__
 *  node-webkit
 *  droidscript
 *  nodejs
