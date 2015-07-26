@@ -9,6 +9,11 @@ This app uses
 *  nodejs's events lib
 *  requirejs
 
+__Development stuff_
+*  node-webkit
+*  droidscript
+*  nodejs
+*  cloud9ide
 
 Running the project
 ---
