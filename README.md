@@ -64,3 +64,56 @@ but as of currently "droidscript" is the best way to go without any overhead fro
 
 
 
+Things you will see in the code
+--------
+
+If you notice __`github-raw-relay.herokuapp.com`__ is a domain used in this project, as this is a proxy that fixes content types recieved from github raw content
+
+here is the source
+```
+var request = require("request");
+
+var mime = require('mime');
+
+var server = require('http').Server(function(req, res) {
+
+    var type = mime.lookup(req.url);
+
+    var x = request('https://raw.githubusercontent.com' + req.url,function(error, response, body) {
+         if (response && response.headers["content-type"] == "text/plain; charset=utf-8") {
+            if (type == "application/octet-stream")
+                type = mime.lookup(".txt");
+                
+            res.writeHead(response.statusCode, {
+                "Content-Type": type,
+                'Cache-Control': 'private, no-cache, no-store, must-revalidate',
+                'Expires': '-1',
+                'Pragma': 'no-cache'
+            });
+
+            res.end(body);
+        }
+    });
+
+    if (type == "application/octet-stream")
+        type = false;
+
+    x.on('response', function(response) {
+        if (response.headers["content-type"] !== "text/plain; charset=utf-8") {
+            req.pipe(x);
+            x.pipe(res);
+        }
+    });
+
+});
+
+
+server.listen(process.env.PORT, process.env.IP, function() {
+    console.log("listening");
+});
+```
+
+
+
+
+

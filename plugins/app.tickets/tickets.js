@@ -66,13 +66,13 @@ define(function() {
             previewComment.manager.emit("addItem", "Save Comment", function() {
                 addComment.manager.parent().emit("back");
                 addComment.manager.parent().emit("back");
-                ticketLayout.manager.emit("update", ticket,true);
+                ticketLayout.manager.emit("update", ticket, true);
             });
             
             previewComment.manager.emit("addItem", "Save Hidden Comment", function() {
                 addComment.manager.parent().emit("back");
                 addComment.manager.parent().emit("back");
-                ticketLayout.manager.emit("update", ticket,true);
+                ticketLayout.manager.emit("update", ticket ,true);
             });
         });
 
