@@ -89,6 +89,13 @@ define(["events"], function(events) {
                 args.unshift("next");
                 parent.emit.apply(parent, args);
             };
+            
+            listEvents.start = function() {
+                var args = argsToArr(arguments);
+                args.unshift(listView.manager.id);
+                args.unshift("start");
+                parent.emit.apply(parent, args);
+            };
             return listEvents;
         };
 

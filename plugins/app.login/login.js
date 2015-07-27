@@ -87,11 +87,11 @@ define(["events"], function(events) {
         });
         
         plugin.login.onLogin(function () {
-            imports.mainLayout.startList.manager.show();
+            imports.mainLayout.startList.manager.start();
         });
         
         plugin.logout.onLogout(function(){
-            loginList.manager.show();
+            loginList.manager.start();
             plugin.login.show();
         });
         

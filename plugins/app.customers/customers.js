@@ -25,7 +25,13 @@ define(function() {
     customerView.manager.on("update", function(customer) {
       customerView.manager.emit("clear");
 
-      customerView.manager.emit("addItem", "<b>" + customer.fullname + "</b>");
+      customerView.manager.emit("addItem", "Name: <b>" + customer.fullname + "</b>");
+      customerView.manager.emit("addItem", "Email: <b>" + customer.email + "</b>");
+      customerView.manager.emit("addItem", "Phone: <b>" + customer.phone + "</b>");
+      customerView.manager.emit("addItem", "Phone: <b>" + customer.mobile + "</b>");
+      customerView.manager.emit("addItem", "Created: <b>" + customer.created_at + "</b>");
+      customerView.manager.emit("addItem", "Address: <b>" + customer.address + "<br/>"+customer.city+", "+customer.state+" "+customer.zip+"</b>");
+      customerView.manager.emit("addItem", "Location Name: <b>" + customer.location_name + "</b>");
 
       customerView.manager.emit("setup");
     });
@@ -81,7 +87,7 @@ define(function() {
       else doAgain = true;
     }
 
-    customerSearchInput.on("change keyup", doUpdate);
+    customerSearchInput.on("keyup", doUpdate);
     /*    
            customersList.manager.on("update", function(customer) {
                 customersList.manager.emit("clear");
