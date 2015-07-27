@@ -25,6 +25,8 @@ define(function() {
         customerView.manager.on("update", function(customer) {
             customerView.manager.emit("clear");
 
+            customerView.manager.emit("addItem", "<b>" + customer.fullname + "</b>");
+
             customerView.manager.emit("setup");
         });
 
@@ -39,14 +41,18 @@ define(function() {
         var customersList = factory.createList("customersList");
 
         var customerSearchForm = $("<form/>");
+        customerSearchForm.submit(function (e) {e.preventDefault()});
         var customerSearchDiv = $("<div/>");
         customerSearchDiv.addClass("ui-input-search ui-shadow-inset ui-input-has-clear ui-body-a ui-corner-all");
         var customerSearchInput = $("<input/>");
         customerSearchForm.append(customerSearchDiv);
         customerSearchDiv.append(customerSearchInput);
         customersList.manager.emit("addItem", customerSearchForm, false, false, true);
-        customerSearchInput.on("change keyup", function() {
-
+        var updating = false;
+        var doAgain = false;
+        var doUpdate = function() {
+            if(!updating){
+                 updating = true;
                 customersList.manager.emit("clear");
                 api.get("/customers/autocomplete", {
                     query: customerSearchInput.val()
@@ -54,20 +60,26 @@ define(function() {
                     customersList.manager.emit("clear");
                     for (var i in data.customers) {
                         var customer = data.customers[i];
-                        customersList.manager.emit("addItem", "<b>" + data.customers[i].fullname + "</b>",function(){
+                        customersList.manager.emit("addItem", "<b>" + data.customers[i].fullname + "</b>", function() {
                             customerView.manager.emit("update", customer);
                             customerView.manager.show();
-                        },true);
+                        }, true);
                     }
                     customersList.manager.emit("setup");
                 }, function() {
-
+    
                 }, function() {
-
+                    updating = false;
+                    if(doAgain) {
+                        doAgain = false;
+                        doUpdate();
+                    }
                 });
-
-            });
-            /*    
+            }else doAgain = true;
+        }
+        
+        customerSearchInput.on("change keyup",doUpdate);
+        /*    
            customersList.manager.on("update", function(customer) {
                 customersList.manager.emit("clear");
         
