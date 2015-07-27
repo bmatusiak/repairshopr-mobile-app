@@ -2,8 +2,8 @@
 /* globals requirejs */
   
   //var appPath = "https://github-raw-relay.herokuapp.com/bmatusiak/repairshopr-mobile-app/master";
-  var appPath = "https://bmatusiak-bmatusiak.c9.io";
-  //var appPath = false;
+  //var appPath = "https://username-project.c9.io";
+  var appPath = false;
 
 if(appPath)
   requirejs.config({
