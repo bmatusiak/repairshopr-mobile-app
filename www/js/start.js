@@ -20,8 +20,8 @@ else
     waitSeconds: 200,
     "baseUrl": "lib",
     "paths": {
-      "root": "../",
-      "plugins": "../plugins"
+      "root": "../js",
+      "plugins": "../assets/plugins"
     }
     }
   );

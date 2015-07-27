@@ -1,15 +1,15 @@
 define(["architect"], function(architect) {
     architect.resolveConfig([
         
-        "plugins/app.main/main",
-        "plugins/app.main/layout",
-        "plugins/app.factory/factory",
-        "plugins/app.events/events",
-        "plugins/app.settings/settings",
-        "plugins/app.login/login",
-        "plugins/app.tickets/tickets",
-        "plugins/app.customers/customers",
-        "plugins/app.api/api",
+        "plugins/main/main",
+        "plugins/main/layout",
+        "plugins/factory/factory",
+        "plugins/events/events",
+        "plugins/settings/settings",
+        "plugins/login/login",
+        "plugins/tickets/tickets",
+        "plugins/customers/customers",
+        "plugins/api/api",
         
         
     ], function(err, config) {

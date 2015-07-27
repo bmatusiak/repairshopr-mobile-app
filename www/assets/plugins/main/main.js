@@ -27,37 +27,28 @@ define(function() {
         window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
                 var popup = $( "<div/>" );
                 popup.popup();
-                popup.html("<h1>Error occured</h1><hr/> " + errorMsg + "<br>" + "["+lineNumber+"]"+url);
+                popup.html("<h1>Error occured</h1><hr/><div> " + errorMsg + "<br>" + "["+lineNumber+"]"+url+"</div>");
                 popup.popup("open");
                 return false;
             };
             
-        try{
-            //This is for droidscript
-            var s = document.createElement("script");
-            s.type = "text/javascript";
-            s.src = "file:///android_asset/app.js";
-            $('head').append(s);
-            if(app){
-                console.log("droidscript detected")
-                app.EnableBackKey(false);
-                window.OnBack = function(){
+        var phonegap = true;
+        if(phonegap){
+            try{
+                //This is for droidscript
+                var s = document.createElement("script");
+                s.type = "text/javascript";
+                s.src = "cordova.js";
+                $('head').append(s);
+                document.addEventListener("backbutton", function(){
                     mainPage.manager.emit("back",function(isEnd){
-                        if(isEnd) app.Exit();
+                        if(isEnd) navigator.app.exitApp();
                     });
-                };
-                console.log("back key disabled");
-                
-                window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
-                    var popup = $( "<div/>" );
-                    popup.popup();
-                    popup.html("<h1>Error occured</h1><hr/> " + errorMsg + "<br>" + "["+lineNumber+"]"+url);
-                    popup.popup("open");
-                    return true;
-                };
+                }, false);
+            }catch(e){
                 
             }
-        }catch(e){ }
+        }
         
         register(null,{main:{
             start:function(){

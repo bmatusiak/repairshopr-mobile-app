@@ -1,0 +1,23 @@
+{
+    "name": "repairshopr-mobile-app",
+    "description": "repairshopr-mobile-app",
+    "version": "0.0.1",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/bmatusiak/repairshopr-mobile-app.git"
+    },
+    "private": "true",
+    "scripts": {
+        "start": "node ./lib/index.js"
+    },
+    "engines": {
+        "node": "0.12.7",
+        "npm": "2.11.3"
+    },
+    "dependencies": {
+        "connect": "2.15.0",
+        "connect-phonegap": "0.16.1"
+    },
+    "devDependencies": {
+    }
+}
