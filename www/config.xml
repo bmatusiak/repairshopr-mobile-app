@@ -17,7 +17,7 @@
   <!--  <preference name="permissions"                value="none"/>  -->
 
     <!-- Customize your app and platform with the preference element. -->
-    <preference name="phonegap-version"           value="3.4.0" />          <!-- all: current version of PhoneGap -->
+    <preference name="phonegap-version"           value="3.7.0" />          <!-- all: current version of PhoneGap -->
 
     <preference name="android-minSdkVersion"      value="10" />              <!-- android: MIN SDK version supported on the target device. MAX version is blank by default. -->
     <preference name="android-installLocation"    value="auto" />           <!-- android: app install location. 'auto' will choose. 'internalOnly' is device memory. 'preferExternal' is SDCard. -->
