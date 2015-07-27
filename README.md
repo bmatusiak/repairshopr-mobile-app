@@ -2,17 +2,17 @@
 repairshopr-mobile-app is a app that only uses the api, and can be converted into a device app
 
 __This app uses__
-*  jQuery
-*  JQuery Mobile
-*  c9.io architect
-*  nodejs's events lib
-*  requirejs
+*  [jQuery](http://jquery.com/)
+*  [JQuery Mobile](http://jquerymobile.com/)
+*  [c9.io architect](https://github.com/c9/architect)
+*  [juliangruber/events](https://github.com/juliangruber/events), [component/emitter](https://github.com/component/emitter)
+*  [requirejs](http://requirejs.org/)
 
 __Development stuff__
-*  node-webkit
-*  droidscript
-*  nodejs
-*  cloud9ide
+*  [node-webkit](http://nwjs.io/)
+*  [droidscript](https://play.google.com/store/apps/details?id=com.smartphoneremote.androidscriptfree&hl=en)
+*  [nodejs](https://nodejs.org/)
+*  [cloud9ide](http://c9.io/)
 
 Running the project
 ---
