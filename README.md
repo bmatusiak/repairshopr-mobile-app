@@ -27,8 +27,7 @@ This will open node webkit pointing local directory.
 *if you use any web browser, you wont be allowd to login to repairshopr-mobile-app*
 
 
-Developing the project
-----
+# Developing the project
 
 
 Development takes place @ c9.io, and this make it easy to collaborate with others when asking for help, you will have to know some linux terminal commands
@@ -41,14 +40,13 @@ Development takes place @ c9.io, and this make it easy to collaborate with other
 6. from the node-server directory, run "node index.js" as this will run the app.
 
 7. with node-webkit running on you 'windows computer', open the "app/index.js" file and fix the window.location path to your running path... 
-8. open "app/package.json" and fix __`"node-remote": "github-raw-relay.herokuapp.com",`__ to your cloud9ide subdomain (__`project-username.c9.io`__), as this will disable 'cross-domain-access' security for that domin
+8. open "app/package.json" and fix __`"node-remote": "github-raw-relay.herokuapp.com",`__ to your cloud9ide subdomain (__`project-username.c9.io`__), as this will disable __`Access-Control-Allow-Origin`__ security for that domin
 9. run "start.bat" 
 
 if every thing is working then start coding.
 
 
-Device Testing
-----
+# Device Testing
 
 Current device testing is done on "Droidscript" android,
 the main plan is to convert to phonegap (adobe's way to build for Android + iOS @ same time),
@@ -62,10 +60,12 @@ but as of currently "droidscript" is the best way to go without any overhead fro
 5. remame "index.html" to "repairshopr.html"
 6. goin droidscript app and click on repairshipr, as this should run it
 
+## DroidScript's __`Access-Control-Allow-Origin`__
+
+As long as this "droidscript app" is loaded as a local file and not redirected to external page, it wont complaing about __`Access-Control-Allow-Origin`__
 
 
-Things you will see in the code
---------
+# Things you will see in the code
 
 If you notice __`github-raw-relay.herokuapp.com`__ is a domain used in this project, as this is a proxy that fixes content types recieved from github raw content
 
