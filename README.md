@@ -36,12 +36,11 @@ Development takes place @ c9.io, and this make it easy to collaborate with other
 2. Fork this repo
 3. After sign up with github.com, navigate to [https://c9.io/auth/github?r=/dashboard.html](https://c9.io/auth/github?r=/dashboard.html), as this will allow you to login into c9.io via github.com auth.
 4. In c9.io's dashboard, find the "repairshopr-mobile-app" repository and setup a project
-5. use a ternimal tab to navigate to folder "node-server" and run "npm install" as this will download some things it need to serv the content
-6. from the node-server directory, run "node index.js" as this will run the app.
-
-7. with node-webkit running on you 'windows computer', open the "app/index.js" file and fix the window.location path to your running path... 
-8. open "app/package.json" and fix __`"node-remote": "github-raw-relay.herokuapp.com",`__ to your cloud9ide subdomain (__`project-username.c9.io`__), as this will disable __`Access-Control-Allow-Origin`__ security for that domin
-9. run "start.bat" 
+5. Use a ternimal tab to navigate to folder "node-server" and run "npm install" as this will download some things it need to serv the content
+6. From the node-server directory, Run "node index.js" as this will run the app.
+7. With node-webkit running on you 'windows computer', Open the "app/index.js" file and fix the window.location path to your running path... 
+8. Open "app/package.json" and fix __`"node-remote": "github-raw-relay.herokuapp.com",`__ to your cloud9ide subdomain (__`project-username.c9.io`__), as this will disable __`Access-Control-Allow-Origin`__ security for that domin
+9. Run "start.bat" 
 
 if every thing is working then start coding.
 
@@ -54,11 +53,11 @@ but as of currently "droidscript" is the best way to go without any overhead fro
 
 1. Install "Droidscript - Javascript IDE" on your android device
 2. Open Droidscript and create a "HTML" project, and name it "repairshopr" as you will need to rename a file later
-3. after crating the project just plug in your android device so project files can be transfered
-4. transfer all files(__you dont need node-webkit or node-server__) from this repo into the project folder for droidscript, this can be found over usb data,(Computer\Nexus 6\Internal storage\DroidScript\repairshopr)
-5. delete repairshopr.html
-5. remame "index.html" to "repairshopr.html"
-6. goin droidscript app and click on repairshipr, as this should run it
+3. After crating the project just plug in your android device so project files can be transfered
+4. Transfer all files(__you dont need node-webkit or node-server__) from this repo into the project folder for droidscript, this can be found over usb data,(Computer\Nexus 6\Internal storage\DroidScript\repairshopr)
+5. Delete repairshopr.html
+5. Remame "index.html" to "repairshopr.html", as when Droidscript runs repairshopr.html as its endpoint
+6. Go into Droidscript and click on repairshipr, as this should run it
 
 ## DroidScript's __`Access-Control-Allow-Origin`__
 
