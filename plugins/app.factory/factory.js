@@ -207,10 +207,10 @@ define(["events"], function(events) {
                     ManagePage(container, $container);
                     return $container;
                 },
-                createList: function() {
-                    var args = argsToArr(arguments);
-                    var id = args.shift();
-                    args[0] = "";
+                createList: function(id,data) {
+                    if(typeof data == "object")
+                        data.id = id;
+                    else data = {id:id};
                     var listView = $("<ul/>",{id:id});
 
                     listView.listview({
