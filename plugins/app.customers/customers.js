@@ -10,7 +10,8 @@ define(function() {
     function plugin(options, imports, register) {
         var settings = imports.settings;
         var factory = imports.factory;
-
+        var api = imports.api;
+        
         function formatDate(Adate) {
             var date = new Date(Adate);
             return date.toDateString() + ", " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
@@ -39,7 +40,15 @@ define(function() {
 
         customersList.manager.on("update", function(customer) {
             customersList.manager.emit("clear");
-
+            customersList.manager.parent().emit("loading");
+            api.customers(function(){
+                
+            },function(){
+                
+            },function(){ 
+                customersList.manager.parent().emit("doneLoading");
+            });
+            
             customersList.manager.emit("setup");
         });
 

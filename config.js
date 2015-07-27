@@ -9,6 +9,7 @@ define(["architect"], function(architect) {
         "plugins/app.login/login",
         "plugins/app.tickets/tickets",
         "plugins/app.customers/customers",
+        "plugins/app.api/api",
         
         
     ], function(err, config) {
