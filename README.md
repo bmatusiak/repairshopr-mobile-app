@@ -14,8 +14,7 @@ __Development stuff__
 *  [nodejs](https://nodejs.org/)
 *  [cloud9ide](http://c9.io/)
 
-Running the project
----
+# Running the project
 
 to get started, download the project [here](https://github.com/bmatusiak/repairshopr-mobile-app/archive/master.zip)
 
