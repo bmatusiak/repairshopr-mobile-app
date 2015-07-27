@@ -37,14 +37,15 @@ define(["events"], function(events) {
             });
             
             listEvents.on("setup", function() {
-                listView.html("");
+                listEvents.emit("clear",true);
+                //listView.html("");
                 for (var i = 0; i < itemsList.length; i++) {
                     itemsList[i]();
                 }
                 listView.listview('refresh');
             });
             
-            listEvents.on("addItem", function(itemName, onClick, noSetup) {
+            listEvents.on("addItem", function(itemName, onClick, noSetup,perm) {
                 var itemNameFn = function() {
                         if (typeof itemName == "function")
                             return itemName();
@@ -62,6 +63,7 @@ define(["events"], function(events) {
                     else
                         body.html(data);
                     listView.append($("<li/>",{
+                        perm:(perm ? "true" : "false"),
                         "data-icon":(onClick ? undefined : false)
                     }).append($("<a/>").click(onClick).html(body)));
                 });
@@ -69,9 +71,10 @@ define(["events"], function(events) {
                     listEvents.emit("setup");
             });
 
-            listEvents.on("clear", function() {
-                listView.html("");
-                itemsList = [];
+            listEvents.on("clear", function(dontClean) {
+                listView.find('li:not([perm="true"])').remove();
+                if(!dontClean)
+                    itemsList = [];
             });
 
 
@@ -208,10 +211,10 @@ define(["events"], function(events) {
                     return $container;
                 },
                 createList: function(id,data) {
-                    if(typeof data == "object")
+                    if(typeof data == "object"){
                         data.id = id;
-                    else data = {id:id};
-                    var listView = $("<ul/>",{id:id});
+                    }else data = {id:id};
+                    var listView = $("<ul/>",data);
 
                     listView.listview({
                         defaults: true

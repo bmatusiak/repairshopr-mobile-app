@@ -35,59 +35,34 @@ define(function() {
         });
 
         /****       ****/
-        var customersList = factory.createList("customersList");
-    
-        customersList.on( "filterablebeforefilter", function ( e, data ) {
-				var $ul = $( this ),
-					$input = $( data.input ),
-					value = $input.val(),
-					html = "";
-				$ul.html( "" );
-				if ( value && value.length > 2 ) {
-					$ul.html( "<li><div class='ui-loader'><span class='ui-icon ui-icon-loading'></span></div></li>" );
-					$ul.listview( "refresh" );
-					$.ajax({
-						url: "http://gd.geobytes.com/AutoCompleteCity",
-						dataType: "jsonp",
-						crossDomain: true,
-						data: {
-							q: $input.val()
-						}
-					})
-					.then( function ( response ) {
-						$.each( response, function ( i, val ) {
-							html += "<li>" + val + "</li>";
-						});
-						$ul.html( html );
-						$ul.listview( "refresh" );
-						$ul.trigger( "updatelayout");
-					});
-				}
-			});
-
-        customersList.manager.on("update", function(customer) {
-            customersList.manager.emit("clear");
-            customersList.manager.parent().emit("loading");
-            api.customers(function(data){
-                
-                var customers = data.customers;
-                
-                
-            },function(){
-                
-            },function(){ 
-                customersList.manager.parent().emit("doneLoading");
-            });
-            
-            customersList.manager.emit("setup");
-        });
-
-        customersList.manager.on("show", function(keepData) {
-            if (!keepData) {
         
-            }
-        });
-
+        var customersList = factory.createList("customersList");
+        
+        var customerSearchForm = $("<form/>");
+        var customerSearchDiv = $("<div/>");
+        customerSearchDiv.addClass("ui-input-search ui-shadow-inset ui-input-has-clear ui-body-a ui-corner-all");
+        var customerSearchInput = $("<input/>");
+        customerSearchForm.append(customerSearchDiv);
+        customerSearchDiv.append(customerSearchInput)
+        customersList.manager.emit("addItem", customerSearchForm, false, false, true);
+         customerSearchInput.on("change keyup",function(){
+             customersList.manager.emit("clear");
+             customersList.manager.emit("addItem", "<b>" +customerSearchInput.val() + "</b>");
+            customersList.manager.emit("setup");
+         })
+        /*    
+           customersList.manager.on("update", function(customer) {
+                customersList.manager.emit("clear");
+        
+                customersList.manager.emit("setup");
+            });
+    
+            customersList.manager.on("show", function(keepData) {
+                if (!keepData) {
+            
+                }
+            });
+        */
         
         imports.mainLayout.startList.manager.emit("addItem",function(){
             return "Customers";
