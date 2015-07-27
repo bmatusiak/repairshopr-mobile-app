@@ -3,6 +3,8 @@
   
   //var appPath = "https://github-raw-relay.herokuapp.com/bmatusiak/repairshopr-mobile-app/master";
   //var appPath = "https://project-username.c9.io";
+  //var appPath = "https://project-username.c9.io";
+  
   var appPath = false;
 
 if(appPath)
@@ -18,10 +20,10 @@ if(appPath)
 else 
   requirejs.config({
     waitSeconds: 200,
-    "baseUrl": "lib",
+    "baseUrl": "assets/lib",
     "paths": {
       "root": "../js",
-      "plugins": "../assets/plugins"
+      "plugins": "../plugins"
     }
     }
   );
