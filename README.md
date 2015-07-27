@@ -58,12 +58,12 @@ but as of currently "droidscript" is the best way to go without any overhead fro
 
 ## DroidScript's 
 
-__`Access-Control-Allow-Origin`__
+###__`Access-Control-Allow-Origin`__
 As long as this "droidscript app" is loaded as a local file and not redirected to external page, it wont complain about __`Access-Control-Allow-Origin`__
 
 ## Node-Webkit's
 
-__`localStorage`__
+###__`localStorage`__
 If you want to remove all the data node-webkit has stored on your computer, use __`"Window's Key" + R`__ and type __`%appdata%/../Local`__ and delete folder __`repairshopr-mobile-app`__
 
 # Things you will see in the code
