@@ -37,11 +37,9 @@ define(function() {
             var s = document.createElement("script");
             s.type = "text/javascript";
             s.src = "file:///android_asset/app.js";
-            s.onerror = function(){
-                return true;
-            };
-            (document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(s);
+            $('head').append(s);
             if(app){
+                console.log("droidscript detected")
                 app.EnableBackKey(false);
                 window.OnBack = function(){
                     mainPage.manager.emit("back",function(isEnd){
