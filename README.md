@@ -41,7 +41,7 @@ Development takes place @ c9.io, and this make it easy to collaborate with other
 6. from the node-server directory, run "node index.js" as this will run the app.
 
 7. with node-webkit running on you 'windows computer', open the "app/index.js" file and fix the window.location path to your running path... 
-8. open "app/package.json" and fix `"node-remote": "github-raw-relay.herokuapp.com",` to your domain, as this will disable 'cross-domain-access' security for that domin
+8. open "app/package.json" and fix __`"node-remote": "github-raw-relay.herokuapp.com",`__ to your cloud9ide subdomain (__`project-username.c9.io`__), as this will disable 'cross-domain-access' security for that domin
 9. run "start.bat" 
 
 if every thing is working then start coding.
