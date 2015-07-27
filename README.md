@@ -17,10 +17,17 @@ __Development stuff__
 
 # Running the project
 
-[Public Builds](https://build.phonegap.com/apps/1569191/share)
+__Andorid & Windows Phone__
+[Public Build](https://build.phonegap.com/apps/1569191/share)
+[Public Hydration Build](https://build.phonegap.com/apps/1569278/share)
 
-# Developing the project
-
+__iOS__
+1. Install App from App store "PhoneGap Developer"
+2. Load App, enter __`repairshopr-mobile-app.herokuapp.com`__
+3. Click Connect
 
 # Device Testing & Debugging
+
+[GapDebug](https://www.genuitec.com/products/gapdebug/download/)
+
 
