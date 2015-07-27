@@ -42,8 +42,7 @@ Development takes place @ c9.io, and this make it easy to collaborate with other
 8. Open "app/package.json" and fix __`"node-remote": "github-raw-relay.herokuapp.com",`__ to your cloud9ide subdomain (__`project-username.c9.io`__), as this will disable __`Access-Control-Allow-Origin`__ security for that domin
 9. Run "start.bat" 
 
-if every thing is working then start coding.
-
+If every thing is working, Then start coding inside c9.io
 
 # Device Testing
 
