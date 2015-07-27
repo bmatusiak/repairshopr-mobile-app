@@ -13,9 +13,10 @@ __Development stuff__
 
 # Running the project
 
+[Public Builds](https://build.phonegap.com/apps/1569191/share)
 
 # Developing the project
 
 
-# Device Testing
+# Device Testing & Debugging
 
