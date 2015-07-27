@@ -55,7 +55,7 @@ but as of currently "droidscript" is the best way to go without any overhead fro
 1. Install "Droidscript - Javascript IDE" on your android device
 2. Open Droidscript and create a "HTML" project, and name it "repairshopr" as you will need to rename a file later
 3. after crating the project just plug in your android device so project files can be transfered
-4. transfer all files from this repo into the project folder for droidscript, this can be found over usb data,(Computer\Nexus 6\Internal storage\DroidScript\repairshopr)
+4. transfer all files(you dont need node-webkit or node-server) from this repo into the project folder for droidscript, this can be found over usb data,(Computer\Nexus 6\Internal storage\DroidScript\repairshopr)
 5. delete repairshopr.html
 5. remame "index.html" to "repairshopr.html"
 6. goin droidscript app and click on repairshipr, as this should run it
