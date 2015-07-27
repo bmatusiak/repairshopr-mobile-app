@@ -63,6 +63,7 @@ define(["events"], function(events) {
             domain($("#login_domain").val());
             username($("#login_un").val());
             var password = $("#login_pw").val();
+            $("#login_pw").val("");
             getApiKey(username(),password,function(err,token){
                 if(!err) pluginEvents.emit("login", api_key(token));
             });
@@ -91,6 +92,7 @@ define(["events"], function(events) {
         });
         
         plugin.logout.onLogout(function(){
+            settings.set("api_key","");
             loginList.manager.start();
             plugin.login.show();
         });

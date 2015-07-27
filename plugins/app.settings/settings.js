@@ -46,16 +46,16 @@ define(function () {
             settingsList.manager.emit("setup");
         });
         
-        pluginEvents.addSetting = function(settingName,settingAbbr){
+        pluginEvents.addSetting = function(settingName,settingAbbr,editable){
             //add location id to settings panel
             settingsList.manager.emit("addItem",function(){
                 return settingAbbr+" - "+pluginEvents.get(settingName);
-            },function() {
+            },(editable ? function() {
                 var mewLocation = prompt( "Set "+settingAbbr+":",pluginEvents.get(settingName));
                 if(mewLocation !== null)
                     pluginEvents.set(settingName,mewLocation);
                 settingsList.manager.emit("setup");
-            });
+            } : undefined));
             
             (pluginEvents.get(settingName) || pluginEvents.set(settingName,""));
             
@@ -68,7 +68,7 @@ define(function () {
         
         
         //add location id to settings panel
-        pluginEvents.addSetting("location","Location ID");
+        pluginEvents.addSetting("location","Location ID",true);
         
         //add settings item to main layout
         imports.mainLayout.startList.manager.emit("addItem","Settings",function() {
