@@ -3,7 +3,7 @@ define(function() {
 
     plugin.provides = ["customers"];
 
-    plugin.consumes = ["factory", "settings","mainLayout","api"];
+    plugin.consumes = ["factory", "settings", "mainLayout", "api"];
 
     return plugin;
 
@@ -11,7 +11,7 @@ define(function() {
         var settings = imports.settings;
         var factory = imports.factory;
         var api = imports.api;
-        
+
         function formatDate(Adate) {
             var date = new Date(Adate);
             return date.toDateString() + ", " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
@@ -35,22 +35,39 @@ define(function() {
         });
 
         /****       ****/
-        
+
         var customersList = factory.createList("customersList");
-        
+
         var customerSearchForm = $("<form/>");
         var customerSearchDiv = $("<div/>");
         customerSearchDiv.addClass("ui-input-search ui-shadow-inset ui-input-has-clear ui-body-a ui-corner-all");
         var customerSearchInput = $("<input/>");
         customerSearchForm.append(customerSearchDiv);
-        customerSearchDiv.append(customerSearchInput)
+        customerSearchDiv.append(customerSearchInput);
         customersList.manager.emit("addItem", customerSearchForm, false, false, true);
-         customerSearchInput.on("change keyup",function(){
-             customersList.manager.emit("clear");
-             customersList.manager.emit("addItem", "<b>" +customerSearchInput.val() + "</b>");
-            customersList.manager.emit("setup");
-         })
-        /*    
+        customerSearchInput.on("change keyup", function() {
+
+                customersList.manager.emit("clear");
+                api.get("/customers/autocomplete", {
+                    query: customerSearchInput.val()
+                }, function(data) {
+                    customersList.manager.emit("clear");
+                    for (var i in data.customers) {
+                        var customer = data.customers[i];
+                        customersList.manager.emit("addItem", "<b>" + data.customers[i].fullname + "</b>",function(){
+                            customerView.manager.emit("update", customer);
+                            customerView.manager.show();
+                        },true);
+                    }
+                    customersList.manager.emit("setup");
+                }, function() {
+
+                }, function() {
+
+                });
+
+            });
+            /*    
            customersList.manager.on("update", function(customer) {
                 customersList.manager.emit("clear");
         
@@ -63,22 +80,22 @@ define(function() {
                 }
             });
         */
-        
-        imports.mainLayout.startList.manager.emit("addItem",function(){
+
+        imports.mainLayout.startList.manager.emit("addItem", function() {
             return "Customers";
-        },function(){
+        }, function() {
             customersList.manager.show();
         });
-        
+
 
         customersList.manager.parent(imports.mainLayout.mainPage.manager);
         customerView.manager.parent(imports.mainLayout.mainPage.manager);
-        
+
 
         register(null, {
             customers: {
-                customerView:customerView,
-                customersList:customersList
+                customerView: customerView,
+                customersList: customersList
             }
         });
     }
