@@ -18,7 +18,9 @@ __Development stuff__
 # Running the project
 
 __Andorid & Windows Phone__
+
 [Public Build](https://build.phonegap.com/apps/1569191/share)
+
 [Public Hydration Build](https://build.phonegap.com/apps/1569278/share)
 
 __iOS__
