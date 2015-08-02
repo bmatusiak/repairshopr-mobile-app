@@ -21,7 +21,10 @@ __Andorid & Windows Phone__
 
 [Public Build](https://build.phonegap.com/apps/1569191/share)
 
-[Public Hydration Build](https://build.phonegap.com/apps/1569278/share)
+
+__Public Hydration Build__
+
+![alt tag](https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=https://build.phonegap.com/apps/1569278/install/vuzkMWwXwa24JWMqLdHx&chld=L|1&choe=UTF-8)
 
 __iOS__
 1. Install App from App store "PhoneGap Developer"
