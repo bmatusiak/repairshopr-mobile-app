@@ -27,9 +27,10 @@ __Public Hydration Build__
 ![alt tag](https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=https://build.phonegap.com/apps/1569278/install/vuzkMWwXwa24JWMqLdHx&chld=L|1&choe=UTF-8)
 
 __iOS__
-1. Install App from App store "PhoneGap Developer"
-2. Load App, enter __`repairshopr-mobile-app.herokuapp.com`__
-3. Click Connect
+
+1.  Install App from App store "PhoneGap Developer"
+2.  Load App, enter __`repairshopr-mobile-app.herokuapp.com`__
+3.  Click Connect
 
 # Device Testing & Debugging
 
