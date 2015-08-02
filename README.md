@@ -19,12 +19,9 @@ __Development stuff__
 
 __Andorid & Windows Phone__
 
-[Public Build](https://build.phonegap.com/apps/1569191/share)
+[Public Build](https://build.phonegap.com/apps/1569191/share) - Must update your self on new builds
 
-
-__Public Hydration Build__
-
-![alt tag](https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=https://build.phonegap.com/apps/1569278/install/vuzkMWwXwa24JWMqLdHx&chld=L|1&choe=UTF-8)
+[Public Hydration Build](https://build.phonegap.com/apps/1569278/share) - Automatic updates
 
 __iOS__
 
