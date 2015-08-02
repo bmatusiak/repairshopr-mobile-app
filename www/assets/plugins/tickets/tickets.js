@@ -214,7 +214,7 @@ define(function() {
                 htmlBody += ticket.problem_type + " - " + formatDate(ticket.updated_at);
                 //ticketsList.AddItem(ticket.number + " - [" + ticket.status + "] " + ticket.subject + "", htmlBody);
                 ticketsList.manager.emit("addItem", "<b>" + ticket.number + " - [" + ticket.status + "] " + ticket.customer_business_then_name + "</b> <span style='float: right;font-weight: bold;'>"+ ticket.subject+"</span><br>" + htmlBody, ticketsList_OnTouch.bind({}, ticket),true);
-            }
+            } 
             
             ticketsList.manager.emit("setup");
         });
