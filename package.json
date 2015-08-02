@@ -16,7 +16,7 @@
     },
     "dependencies": {
         "connect": "2.15.0",
-        "connect-phonegap": "0.16.1"
+        "connect-phonegap": "https://github.com/bmatusiak/connect-phonegap/archive/master.tar.gz"
     },
     "devDependencies": {
     }
