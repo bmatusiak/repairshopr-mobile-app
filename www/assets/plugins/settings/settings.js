@@ -72,6 +72,7 @@ define(function () {
         
         //add settings item to main layout
         imports.mainLayout.startList.manager.emit("addItem","Settings",function() {
+            settingsList.manager.emit("setup");
             settingsList.manager.show();
         });
         
