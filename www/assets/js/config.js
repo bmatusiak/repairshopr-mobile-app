@@ -1,4 +1,5 @@
 define(["architect"], function(architect) {
+    console.log("Loading APP")
     architect.resolveConfig([
         
         "plugins/main/main",
@@ -18,6 +19,7 @@ define(["architect"], function(architect) {
             if (err) {console.log(err,err.stack);throw err;}
             else app.services.main.start();
             
+            console.log("Loaded APP");
         });
     });
     //Return the module value

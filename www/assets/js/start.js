@@ -23,7 +23,7 @@ else
     "baseUrl": "assets/lib",
     "paths": {
       "root": "../js",
-      "plugins": "../plugins"
+      "plugins": "../plugins" 
     }
     }
   );

@@ -32,7 +32,7 @@ define(function() {
                 return false;
             };
             
-        var phonegap = true;
+        var phonegap = !(window.global);
         if(phonegap){
             try{
                 //This is for droidscript
