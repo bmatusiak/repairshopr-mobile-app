@@ -67,11 +67,12 @@ define(function() {
         }, function(data) {
           customersList.manager.emit("clear");
           for (var i in data.customers) {
-            var customer = data.customers[i];
-            customersList.manager.emit("addItem", "<b>" + data.customers[i].fullname + "</b>", function() {
-              customerView.manager.emit("update", customer);
-              customerView.manager.show();
-            }, true);
+            (function(customer){
+              customersList.manager.emit("addItem", "<b>" + data.customers[i].fullname + "</b>", function() {
+                customerView.manager.emit("update", customer);
+                customerView.manager.show();
+              }, true);
+            })(data.customers[i]);
           }
           customersList.manager.emit("setup");
         }, function() {
