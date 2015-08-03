@@ -24,8 +24,10 @@ define(function() {
         changeTicketStatus.manager.on("update", function(ticket) {
             changeTicketStatus.manager.emit("clear");
             var statuss = ["Waiting On Part","In Progress","Ready for Pickup","Resolved"];
+            changeTicketStatus.manager.emit("addItem", "<b>" + ticket.number + " - [" + ticket.status + "] " + ticket.customer_business_then_name + "</b> <span style='float: right;font-weight: bold;'>"+ ticket.subject+"</span><br>" + ticket.problem_type + " - " + formatDate(ticket.updated_at));
             for (var i = 0; i < statuss.length; i++) {
                 changeTicketStatus.manager.emit("addItem", statuss[i],(function(status){
+                    if(!window.confirm("Are your sure?")) return;
                     api.put("/tickets/"+ticket.id,{
                         status: status
                     },function(){
@@ -52,6 +54,7 @@ define(function() {
 
         addComment.manager.on("update", function(ticket) {
             addComment.manager.emit("clear");
+            addComment.manager.emit("addItem", "<b>" + ticket.number + " - [" + ticket.status + "] " + ticket.customer_business_then_name + "</b> <span style='float: right;font-weight: bold;'>"+ ticket.subject+"</span><br>" + ticket.problem_type + " - " + formatDate(ticket.updated_at));
 
             var item =  $("<textarea/>");
             item.css("width","100%");
@@ -71,12 +74,15 @@ define(function() {
         var previewComment = factory.createList("previewComment");
         previewComment.manager.on("update", function(ticket, comment) {
             previewComment.manager.emit("clear");
+            previewComment.manager.emit("addItem", "<b>" + ticket.number + " - [" + ticket.status + "] " + ticket.customer_business_then_name + "</b> <span style='float: right;font-weight: bold;'>"+ ticket.subject+"</span><br>" + ticket.problem_type + " - " + formatDate(ticket.updated_at));
+
             var text = $("<textarea/>",{disabled:"disabled"});
             text.css("width","100%");
             text.css("min-height","100px");
             text.text(comment);
             previewComment.manager.emit("addItem", text);
             previewComment.manager.emit("addItem", "Save Comment", function() {
+                if(!window.confirm("Are your sure?")) return;
                 api.post("/tickets/"+ticket.number+"/comment",{
                     subject:"Update",
                     body: text.text(),
@@ -92,6 +98,7 @@ define(function() {
                 });
             });
             previewComment.manager.emit("addItem", "Save Comment & Email", function() {
+                if(!window.confirm("Are your sure?")) return;
                 api.post("/tickets/"+ticket.number+"/comment",{
                     subject:"Update",
                     body: text.text(),
@@ -108,6 +115,7 @@ define(function() {
             });
 
             previewComment.manager.emit("addItem", "Save Hidden Comment", function() {
+                if(!window.confirm("Are your sure?")) return;
                 api.post("/tickets/"+ticket.number+"/comment",{
                     subject:"Update",
                     body: text.text(),
