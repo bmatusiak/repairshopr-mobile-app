@@ -83,6 +83,21 @@ define(function() {
                     console.log(arguments)
                 });
             });
+            previewComment.manager.emit("addItem", "Save Comment & Email", function() {
+                api.post("/tickets/"+ticket.number+"/comment",{
+                    subject:"Update",
+                    body: text.text(),
+                    hidden:"0",
+                    sms_body:"",
+                    do_not_email:"0"
+                },function(){
+                    addComment.manager.parent().emit("back");
+                    addComment.manager.parent().emit("back");
+                    ticketLayout.manager.emit("update", ticket, true);
+                },function(){
+                    console.log(arguments)
+                });
+            });
 
             previewComment.manager.emit("addItem", "Save Hidden Comment", function() {
                 api.post("/tickets/"+ticket.number+"/comment",{
@@ -157,7 +172,7 @@ define(function() {
                 });
                 ticket.comments.reverse();
                 for (var i in ticket.comments) {
-                    ticketLayout.manager.emit("addItem", ticket.comments[i].tech + " - [<b>" + ticket.comments[i].subject + "</b>] - " + formatDate(ticket.created_at) + "<br/>" + ticket.comments[i].body);
+                    ticketLayout.manager.emit("addItem", ticket.comments[i].tech + " - [<b>" + ticket.comments[i].subject + "</b>] - " + formatDate(ticket.created_at) + "<br/>" + ticket.comments[i].body.replace(/(?:\r\n|\r|\n)/g, '<br />'));
                     //ticketLayout.manager.emit("addItem",ticket.comments[i].body);
                     ticketLayout.manager.emit("addItem", "<hr/>");
 
