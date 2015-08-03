@@ -141,13 +141,10 @@ define(function() {
               customersList.manager.emit("addItem", "<b>" + data.customers[i].fullname + "</b>", function() {
                 customerView.manager.emit("update", customer);
                 customerView.manager.show();
-              }, true);
+              });
             })(data.customers[i]);
           }
           customersList.manager.emit("setup");
-        }, function() {
-
-        }, function() {
         });
     }
     customersList.manager.on("show", function(keepData) {
