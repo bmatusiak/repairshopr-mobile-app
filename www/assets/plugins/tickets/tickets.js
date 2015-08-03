@@ -281,14 +281,17 @@ define(function() {
                         return function(li){
                             if(ticket.status == "Customer Reply"){
                                 li.find("a").css("background-color","rgba(255, 0, 0, 0.27)");
+                                li.find("a").css("text-shadow", "0 0");
                                 console.log(li)
                             }
                             if(ticket.status == "In Progress"){
                                 li.find("a").css("background-color","rgba(0, 255, 0, 0.27)");
+                                li.find("a").css("text-shadow", "0 0");
                                 console.log(li)
                             }
                             if(ticket.status == "New"){
                                 li.find("a").css("background-color","rgba(0, 0, 255, 0.27)");
+                                li.find("a").css("text-shadow", "0 0");
                                 console.log(li)
                             }
                         }
