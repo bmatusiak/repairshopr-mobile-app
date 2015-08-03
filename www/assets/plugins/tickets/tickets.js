@@ -274,7 +274,25 @@ define(function() {
                 var htmlBody = "";
                 htmlBody += ticket.problem_type + " - " + formatDate(ticket.updated_at);
                 //ticketsList.AddItem(ticket.number + " - [" + ticket.status + "] " + ticket.subject + "", htmlBody);
-                ticketsList.manager.emit("addItem", "<b>" + ticket.number + " - [" + ticket.status + "] " + ticket.customer_business_then_name + "</b> <span style='float: right;font-weight: bold;'>"+ ticket.subject+"</span><br>" + htmlBody, ticketsList_OnTouch.bind({}, ticket));
+                ticketsList.manager.emit("addItem", "<b>" + ticket.number + " - [" + ticket.status + "] " +
+                                                        ticket.customer_business_then_name + "</b> <span style='float: right;font-weight: bold;'>"+
+                                                                ticket.subject+"</span><br>" + htmlBody,
+                    ticketsList_OnTouch.bind({}, ticket),false,false,(function(ticket){
+                        return function(li){
+                            if(ticket.status == "Customer Reply"){
+                                li.find("a").css("background-color","rgba(255, 0, 0, 0.27)");
+                                console.log(li)
+                            }
+                            if(ticket.status == "In Progress"){
+                                li.find("a").css("background-color","rgba(0, 255, 0, 0.27)");
+                                console.log(li)
+                            }
+                            if(ticket.status == "New"){
+                                li.find("a").css("background-color","rgba(0, 0, 255, 0.27)");
+                                console.log(li)
+                            }
+                        }
+                    })(ticket));
             }
 
             ticketsList.manager.emit("setup");

@@ -45,7 +45,7 @@ define(["events"], function(events) {
                 listView.listview('refresh');
             });
 
-            listEvents.on("addItem", function(itemName, onClick, setup,perm) {
+            listEvents.on("addItem", function(itemName, onClick, setup,perm,parsed) {
                 var itemNameFn = function() {
                         if (typeof itemName == "function")
                             return itemName();
@@ -62,10 +62,14 @@ define(["events"], function(events) {
                         body.append(data);
                     else
                         body.html(data);
-                    listView.append($("<li/>",{
+                    var li =$("<li/>",{
                         perm:(perm ? "true" : "false"),
                         "data-icon":(onClick ? undefined : false)
-                    }).append($("<a/>").click(onClick).html(body)));
+                    }).append($("<a/>").click(onClick).html(body));
+
+                    if(parsed)
+                        parsed(li);
+                    listView.append(li);
                 });
                 if(setup)
                     listEvents.emit("setup");
