@@ -3,13 +3,14 @@ define(function() {
 
     plugin.provides = ["tickets"];
 
-    plugin.consumes = ["factory", "settings","mainLayout"];
+    plugin.consumes = ["factory", "settings","mainLayout","customers"];
 
     return plugin;
 
     function plugin(options, imports, register) {
         var settings = imports.settings;
         var factory = imports.factory;
+        var customers = imports.customers;
 
         function formatDate(Adate) {
             var date = new Date(Adate);
@@ -115,7 +116,10 @@ define(function() {
             }
 
             function parseTicket(){
-                ticketLayout.manager.emit("addItem", ticket.number + " - " + ticket.customer.fullname + "");
+                ticketLayout.manager.emit("addItem", ticket.number + " - " + ticket.customer.fullname + "",function(){
+                    customers.customerView.manager.emit("update", ticket.customer);
+                    customers.customerView.manager.show();
+                });
                 ticketLayout.manager.emit("addItem", "Status - " + ticket.status, function() {
 
                     changeTicketStatus.manager.emit("update", ticket);

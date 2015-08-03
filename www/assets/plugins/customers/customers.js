@@ -3,7 +3,7 @@ define(function() {
 
   plugin.provides = ["customers"];
 
-  plugin.consumes = ["factory", "settings", "mainLayout", "api"];
+  plugin.consumes = ["factory", "settings", "mainLayout", "api","customer_assets"];
 
   return plugin;
 
@@ -11,7 +11,7 @@ define(function() {
     var settings = imports.settings;
     var factory = imports.factory;
     var api = imports.api;
-
+    var customer_assets = imports.customer_assets;
     function formatDate(Adate) {
       var date = new Date(Adate);
       return date.toDateString() + ", " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
@@ -32,6 +32,11 @@ define(function() {
       customerView.manager.emit("addItem", "Created: <b>" + customer.created_at + "</b>");
       customerView.manager.emit("addItem", "Address: <b>" + customer.address + "<br/>"+customer.city+", "+customer.state+" "+customer.zip+"</b>");
       customerView.manager.emit("addItem", "Location Name: <b>" + customer.location_name + "</b>");
+      customerView.manager.emit("addItem", "Assets",function(){
+
+          customer_assets.customer_assetsList.manager.emit("update",customer);
+          customer_assets.customer_assetsList.manager.show();
+      });
 
       customerView.manager.emit("setup");
     });
