@@ -39,22 +39,22 @@ define(function() {
 
       /*
        {
-          id: 
-          customer_id: 
-          customer_business_then_name: 
-          number: 
-          created_at: 
-          updated_at: 
-          date: 
+          id:
+          customer_id:
+          customer_business_then_name:
+          number:
+          created_at:
+          updated_at:
+          date:
           subtotal:
-          total: 
-          tax: 
-          verified_paid: 
-          tech_marked_paid: 
-          ticket_id: 
-          pdf_url: 
-          is_paid: 
-       } 
+          total:
+          tax:
+          verified_paid:
+          tech_marked_paid:
+          ticket_id:
+          pdf_url:
+          is_paid:
+       }
       */
       invoicesView.manager.emit("setup");
     });
@@ -100,7 +100,7 @@ define(function() {
       invoicesList.manager.emit("clear");
       for (var j in invoices) {
         var invoice = invoices[j];
-        
+
         invoicesList.manager.emit("addItem", "<b>" + invoice.number + " - ["+(invoice.verified_paid ? "PAID" : "UN-PAID")+"] " + invoice.customer_business_then_name + "</b> <br>" + invoice.date, invoicesList_OnTouch.bind({}, invoice), true);
       }
 
@@ -126,7 +126,7 @@ define(function() {
       return "Invoices";
     }, function() {
       invoicesList.manager.show();
-    });
+    },true);
 
 
     invoicesList.manager.parent(imports.mainLayout.mainPage.manager);

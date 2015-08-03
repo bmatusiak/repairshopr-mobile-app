@@ -11,11 +11,11 @@ define(["events"], function(events) {
 
     function appPlugin(options, imports, register) {
         var settings = imports.settings;
-        
+
         var domain = settings.addSetting("domain","Domain");
         var api_key = settings.addSetting("api_key","API_KEY");
         var username = settings.addSetting("username","UserName");
-        
+
         function getApiKey(username, password, callback) {
             $.post("https://"+domain()+".repairshopr.com/api/v1/sign_in", {
                 email: username,
@@ -26,7 +26,7 @@ define(["events"], function(events) {
                 callback(true);
             });
         }
-        
+
         var plugin = {
             login: {
                 show:function (){
@@ -55,10 +55,10 @@ define(["events"], function(events) {
                 }
             }
         };
-        
+
         $("#login_domain").val(domain());
         $("#login_un").val(username());
-        
+
         $("#popupLogin").submit(function(e) {
             domain($("#login_domain").val());
             username($("#login_un").val());
@@ -70,37 +70,37 @@ define(["events"], function(events) {
             e.preventDefault();
             $( "#popupLogin" ).popup( "close" );
         });
-        
-        
+
+
         imports.mainLayout.startList.manager.emit("addItem",function(){
             return "Logout";
         },function(){
             plugin.logout.start();
-        });
-        
+        },true);
+
         var loginList = imports.factory.createList("loginList");
         loginList.manager.parent(imports.mainLayout.mainPage.manager);
-        
+
         loginList.manager.emit("addItem",function(){
             return "Login";
         },function(){
             plugin.login.show();
         });
-        
+
         plugin.login.onLogin(function () {
             imports.mainLayout.startList.manager.start();
         });
-        
+
         plugin.logout.onLogout(function(){
             settings.set("api_key","");
             loginList.manager.start();
             plugin.login.show();
         });
-        
-        
-        
-        
-        
+
+
+
+
+
         register(null, plugin );
     }
 

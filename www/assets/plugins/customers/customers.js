@@ -89,16 +89,16 @@ define(function() {
     }
 
     customerSearchInput.on("keyup", doUpdate);
-    /*    
+    /*
            customersList.manager.on("update", function(customer) {
                 customersList.manager.emit("clear");
-        
+
                 customersList.manager.emit("setup");
             });
-    
+
             customersList.manager.on("show", function(keepData) {
                 if (!keepData) {
-            
+
                 }
             });
         */
@@ -107,7 +107,7 @@ define(function() {
       return "Customers";
     }, function() {
       customersList.manager.show();
-    });
+    },true);
 
 
     customersList.manager.parent(imports.mainLayout.mainPage.manager);

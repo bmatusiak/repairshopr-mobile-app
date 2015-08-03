@@ -38,17 +38,17 @@ define(function() {
 
       /*
        {
-          id: 
-          created_at: 
-          updated_at: 
-          success: 
-          payment_amount: 
+          id:
+          created_at:
+          updated_at:
+          success:
+          payment_amount:
           invoice_ids:[id]
-          ref_num: 
-          applied_at: 
-          payment_method: 
+          ref_num:
+          applied_at:
+          payment_method:
           transaction_response:
-       } 
+       }
       */
       paymentsView.manager.emit("setup");
     });
@@ -64,7 +64,7 @@ define(function() {
     var paymentsList = factory.createList("paymentsList");
 
     function paymentsList_OnTouch(payment) {
-      
+
         paymentsView.manager.emit("update", payment);
         paymentsView.manager.show(payment);
     }
@@ -73,7 +73,7 @@ define(function() {
       paymentsList.manager.emit("clear");
       for (var j in payments) {
         var payment = payments[j];
-        
+
         paymentsList.manager.emit("addItem", "<b>" + payment.id + " - ["+payment.payment_method+"] Invoices: " + payment.invoice_ids.toString() + "</b> <br>" + payment.created_at, paymentsList_OnTouch.bind({}, payment), true);
       }
 
@@ -99,7 +99,7 @@ define(function() {
       return "Payments";
     }, function() {
       paymentsList.manager.show();
-    });
+    },true);
 
 
     paymentsList.manager.parent(imports.mainLayout.mainPage.manager);

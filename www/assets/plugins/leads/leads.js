@@ -43,28 +43,28 @@ define(function() {
       leadsView.manager.emit("addItem", "ticket_id: <b>" + lead.ticket_id + "</b>");
       leadsView.manager.emit("addItem", "customer_id: <b>" + lead.customer_id + "</b>");
       leadsView.manager.emit("addItem", "contact_id: <b>" + lead.contact_id + "</b>");
-      
+
       /*
        {
-          id: 
-          first_name: 
-          last_name: 
-          email: 
-          phone: 
-          mobile: 
-          created_at: 
-          updated_at: 
-          address: 
-          city: 
-          state: 
-          zip: 
-          ticket_subject: 
-          ticket_description: 
-          ticket_problem_type: 
-          ticket_id: 
-          customer_id: 
-          contact_id: 
-       } 
+          id:
+          first_name:
+          last_name:
+          email:
+          phone:
+          mobile:
+          created_at:
+          updated_at:
+          address:
+          city:
+          state:
+          zip:
+          ticket_subject:
+          ticket_description:
+          ticket_problem_type:
+          ticket_id:
+          customer_id:
+          contact_id:
+       }
       */
       leadsView.manager.emit("setup");
     });
@@ -80,7 +80,7 @@ define(function() {
     var leadsList = factory.createList("leadsList");
 
     function leadsList_OnTouch(lead) {
-      
+
         leadsView.manager.emit("update", lead);
         leadsView.manager.show(lead);
     }
@@ -89,7 +89,7 @@ define(function() {
       leadsList.manager.emit("clear");
       for (var j in leads) {
         var lead = leads[j];
-        
+
         leadsList.manager.emit("addItem", "<b>" + lead.id + " - ["+lead.city+"] "+ lead.first_name + " " + lead.last_name +" - " + lead.phone + "</b> <br>" + lead.ticket_problem_type, leadsList_OnTouch.bind({}, lead), true);
       }
 
@@ -115,7 +115,7 @@ define(function() {
       return "Leads";
     }, function() {
       leadsList.manager.show();
-    });
+    },true);
 
 
     leadsList.manager.parent(imports.mainLayout.mainPage.manager);

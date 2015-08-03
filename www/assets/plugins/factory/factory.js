@@ -7,13 +7,13 @@ define(["events"], function(events) {
     return plugin;
 
     function plugin(options, imports, register) {
-        
+
         function parentAble(child){
             return function(Parent) {
                 if(Parent && !child.manager.getParent){
                     if(child.manager && child.manager.id)
                         Parent.emit("addChild", child.manager.id, child);
-                    
+
                     child.manager.emit("addParent", Parent);
                     child.manager.getParent = function(){
                         return Parent;
@@ -23,7 +23,7 @@ define(["events"], function(events) {
             };
         }
         var CreateList = function(id, listView) {
-            
+
             var parent;
             var itemsList = [];
             var listEvents = new EventEmitter();
@@ -31,11 +31,11 @@ define(["events"], function(events) {
             listEvents.id = id;
             listView.manager = listEvents;
             listEvents.parent = parentAble(listView);
-            
+
             listEvents.on("addParent",function(Parrent){
                 parent = Parrent;
             });
-            
+
             listEvents.on("setup", function() {
                 listEvents.emit("clear",true);
                 //listView.html("");
@@ -44,8 +44,8 @@ define(["events"], function(events) {
                 }
                 listView.listview('refresh');
             });
-            
-            listEvents.on("addItem", function(itemName, onClick, noSetup,perm) {
+
+            listEvents.on("addItem", function(itemName, onClick, setup,perm) {
                 var itemNameFn = function() {
                         if (typeof itemName == "function")
                             return itemName();
@@ -56,7 +56,7 @@ define(["events"], function(events) {
                     body.css("text-overflow" , "initial");
                     body.css("overflow" , "initial");
                     body.css("white-space" , "initial");
-                    
+
                     var data = itemNameFn();
                     if(typeof data == "object")
                         body.append(data);
@@ -67,7 +67,7 @@ define(["events"], function(events) {
                         "data-icon":(onClick ? undefined : false)
                     }).append($("<a/>").click(onClick).html(body)));
                 });
-                if(!noSetup)
+                if(setup)
                     listEvents.emit("setup");
             });
 
@@ -82,14 +82,14 @@ define(["events"], function(events) {
                 listView.show();
             });
 
-            
+
             listEvents.show = function() {
                 var args = argsToArr(arguments);
                 args.unshift(listView.manager.id);
                 args.unshift("next");
                 parent.emit.apply(parent, args);
             };
-            
+
             listEvents.start = function() {
                 var args = argsToArr(arguments);
                 args.unshift(listView.manager.id);
@@ -103,7 +103,7 @@ define(["events"], function(events) {
         var ManageContainer = function(id, layout) {
 
             var layoutChildren = {};
-            
+
             var layoutEvents = new EventEmitter();
             layoutEvents.id = id;
             layout.manager = layoutEvents;

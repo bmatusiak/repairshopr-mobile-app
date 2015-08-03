@@ -39,18 +39,18 @@ define(function() {
 
       /*
        {
-         id: 
-         summary: 
-         description: 
-         customer_id: 
-         created_at: 
+         id:
+         summary:
+         description:
+         customer_id:
+         created_at:
          updated_at:
-         start_at: 
-         end_at: 
-         duration: 
-         location: 
+         start_at:
+         end_at:
+         duration:
+         location:
          ticket_id:
-       } 
+       }
       */
       appointmentsView.manager.emit("setup");
     });
@@ -96,7 +96,7 @@ define(function() {
       appointmentsList.manager.emit("clear");
       for (var j in appointments) {
         var appointment = appointments[j];
-        
+
         appointmentsList.manager.emit("addItem", "<b>" + appointment.id + " - " + appointment.summary + "</b> <br>" + appointment.description, appointmentsList_OnTouch.bind({}, appointment), true);
       }
 
@@ -122,7 +122,7 @@ define(function() {
       return "Appointments";
     }, function() {
       appointmentsList.manager.show();
-    });
+    }),true;
 
 
     appointmentsList.manager.parent(imports.mainLayout.mainPage.manager);

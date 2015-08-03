@@ -28,6 +28,7 @@ define(function() {
             changeTicketStatus.manager.emit("addItem", "In Progress");
             changeTicketStatus.manager.emit("addItem", "Ready for Pickup");
 
+            changeTicketStatus.manager.emit("setup");
         });
 
         changeTicketStatus.manager.on("show", function(keepData) {
@@ -42,21 +43,22 @@ define(function() {
 
         addComment.manager.on("update", function(ticket) {
             addComment.manager.emit("clear");
-            
+
             var item =  $("<textarea/>");
             item.css("width","100%");
             item.css("min-height","100px");
-            
+
             addComment.manager.emit("addItem",item);
-            
+
 
             addComment.manager.emit("addItem", "Preview Comment", function() {
                 var commentText = item.val();
                 previewComment.manager.emit("update",ticket, commentText);
                 previewComment.manager.show(ticket,commentText);
             });
+            addComment.manager.emit("setup");
         });
-        
+
         var previewComment = factory.createList("previewComment");
         previewComment.manager.on("update", function(ticket, comment) {
             previewComment.manager.emit("clear");
@@ -68,12 +70,13 @@ define(function() {
                 addComment.manager.parent().emit("back");
                 ticketLayout.manager.emit("update", ticket, true);
             });
-            
+
             previewComment.manager.emit("addItem", "Save Hidden Comment", function() {
                 addComment.manager.parent().emit("back");
                 addComment.manager.parent().emit("back");
                 ticketLayout.manager.emit("update", ticket ,true);
             });
+            previewComment.manager.emit("setup");
         });
 
         /****       ****/
@@ -86,12 +89,12 @@ define(function() {
         });
 
         ticketLayout.manager.on("update", function(ticket,reloadTicket) {
-            
+
             ticketLayout.manager.emit("clear");
-            
+
             if(!reloadTicket) return parseTicket();
             else {
-                
+
                 ticketsList.manager.parent().emit("loading");
                 var customer = ticket.customer;
                 $.get("https://"+settings.get("domain")+".repairshopr.com/api/v1/tickets", {
@@ -110,11 +113,11 @@ define(function() {
                     ticketsList.manager.parent().emit("doneLoading");
                 });
             }
-            
+
             function parseTicket(){
                 ticketLayout.manager.emit("addItem", ticket.number + " - " + ticket.customer.fullname + "");
                 ticketLayout.manager.emit("addItem", "Status - " + ticket.status, function() {
-    
+
                     changeTicketStatus.manager.emit("update", ticket);
                     changeTicketStatus.manager.show(ticket);
                 });
@@ -131,8 +134,9 @@ define(function() {
                     ticketLayout.manager.emit("addItem", ticket.comments[i].tech + " - [<b>" + ticket.comments[i].subject + "</b>] - " + formatDate(ticket.created_at) + "<br/>" + ticket.comments[i].body);
                     //ticketLayout.manager.emit("addItem",ticket.comments[i].body);
                     ticketLayout.manager.emit("addItem", "<hr/>");
-    
+
                 }
+                ticketLayout.manager.emit("setup");
             }
         });
 
@@ -148,7 +152,7 @@ define(function() {
         ticketsList.manager.on("addParent", function(Parent) {
             ticketLayout.manager.parent(Parent);
         });
-        
+
         function loadCustomer(ticket,done,fail,always){
              $.get("https://"+settings.get("domain")+".repairshopr.com/api/v1/customers/" + ticket.customer_id, {
                     api_key: settings.get("api_key")
@@ -166,7 +170,7 @@ define(function() {
         function ticketsList_OnTouch(ticket) {
             ticketsList.manager.parent().emit("loading");
             //var item = ticketsList.itemData[ticketNumber];
-            
+
             loadCustomer(ticket,function() {
                     ticketLayout.manager.emit("update", ticket);
                     ticketLayout.manager.show(ticket);
@@ -213,9 +217,9 @@ define(function() {
                 var htmlBody = "";
                 htmlBody += ticket.problem_type + " - " + formatDate(ticket.updated_at);
                 //ticketsList.AddItem(ticket.number + " - [" + ticket.status + "] " + ticket.subject + "", htmlBody);
-                ticketsList.manager.emit("addItem", "<b>" + ticket.number + " - [" + ticket.status + "] " + ticket.customer_business_then_name + "</b> <span style='float: right;font-weight: bold;'>"+ ticket.subject+"</span><br>" + htmlBody, ticketsList_OnTouch.bind({}, ticket),true);
-            } 
-            
+                ticketsList.manager.emit("addItem", "<b>" + ticket.number + " - [" + ticket.status + "] " + ticket.customer_business_then_name + "</b> <span style='float: right;font-weight: bold;'>"+ ticket.subject+"</span><br>" + htmlBody, ticketsList_OnTouch.bind({}, ticket));
+            }
+
             ticketsList.manager.emit("setup");
         });
 
@@ -238,14 +242,14 @@ define(function() {
                 });
             //}
         });
-        
-        
+
+
         imports.mainLayout.startList.manager.emit("addItem",function(){
             return "Tickets";
         },function(){
             ticketsList.manager.show();
-        });
-        
+        },true);
+
 
         register(null, {
             tickets: {
