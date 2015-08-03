@@ -3,7 +3,7 @@ define(function() {
 
     plugin.provides = ["tickets"];
 
-    plugin.consumes = ["factory", "settings","mainLayout","customers"];
+    plugin.consumes = ["factory", "settings","mainLayout","customers","api"];
 
     return plugin;
 
@@ -11,7 +11,7 @@ define(function() {
         var settings = imports.settings;
         var factory = imports.factory;
         var customers = imports.customers;
-
+        var api = imports.api;
         function formatDate(Adate) {
             var date = new Date(Adate);
             return date.toDateString() + ", " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
@@ -63,13 +63,25 @@ define(function() {
         var previewComment = factory.createList("previewComment");
         previewComment.manager.on("update", function(ticket, comment) {
             previewComment.manager.emit("clear");
-            var text = $("<p/>");
+            var text = $("<textarea/>",{disabled:"disabled"});
+            text.css("width","100%");
+            text.css("min-height","100px");
             text.text(comment);
             previewComment.manager.emit("addItem", text);
             previewComment.manager.emit("addItem", "Save Comment", function() {
-                addComment.manager.parent().emit("back");
-                addComment.manager.parent().emit("back");
-                ticketLayout.manager.emit("update", ticket, true);
+                api.post("/tickets/"+ticket.number+"/comment",{
+                    subject:"Update",
+                    body: text.text(),
+                    hidden:"1",
+                    sms_body:"",
+                    do_not_email:"1"
+                },function(){
+                    addComment.manager.parent().emit("back");
+                    addComment.manager.parent().emit("back");
+                    ticketLayout.manager.emit("update", ticket, true);
+                },function(){
+                    console.log(arguments)
+                });
             });
 
             previewComment.manager.emit("addItem", "Save Hidden Comment", function() {
