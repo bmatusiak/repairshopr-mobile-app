@@ -101,7 +101,7 @@ define(function() {
       for (var j in invoices) {
         var invoice = invoices[j];
 
-        invoicesList.manager.emit("addItem", "<b>" + invoice.number + " - ["+(invoice.verified_paid ? "PAID" : "UN-PAID")+"] " + invoice.customer_business_then_name + "</b> <br>" + invoice.date, invoicesList_OnTouch.bind({}, invoice), true);
+        invoicesList.manager.emit("addItem", "<b>" + invoice.number + " - ["+(invoice.is_paid ? "PAID" : "UN-PAID")+"] " + invoice.customer_business_then_name + "</b> <br>" + invoice.date, invoicesList_OnTouch.bind({}, invoice), true);
       }
 
       invoicesList.manager.emit("setup");
