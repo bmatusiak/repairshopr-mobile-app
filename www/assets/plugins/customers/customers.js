@@ -55,7 +55,7 @@ define(function() {
     var customerSearchInput = $("<input/>");
     customerSearchForm.append(customerSearchDiv);
     customerSearchDiv.append(customerSearchInput);
-    customersList.manager.emit("addItem", customerSearchForm, false, false, true);
+    customersList.manager.emit("addItem", customerSearchForm, false, true, true);
     var updating = false;
     var doAgain = false;
     var doUpdate = function() {
