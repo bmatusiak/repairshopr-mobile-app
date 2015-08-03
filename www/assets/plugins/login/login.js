@@ -85,7 +85,7 @@ define(["events"], function(events) {
             return "Login";
         },function(){
             plugin.login.show();
-        });
+        },true);
 
         plugin.login.onLogin(function () {
             imports.mainLayout.startList.manager.start();
