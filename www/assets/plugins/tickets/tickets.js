@@ -72,7 +72,7 @@ define(function() {
                 api.post("/tickets/"+ticket.number+"/comment",{
                     subject:"Update",
                     body: text.text(),
-                    hidden:"1",
+                    hidden:"0",
                     sms_body:"",
                     do_not_email:"1"
                 },function(){
@@ -85,9 +85,19 @@ define(function() {
             });
 
             previewComment.manager.emit("addItem", "Save Hidden Comment", function() {
-                addComment.manager.parent().emit("back");
-                addComment.manager.parent().emit("back");
-                ticketLayout.manager.emit("update", ticket ,true);
+                api.post("/tickets/"+ticket.number+"/comment",{
+                    subject:"Update",
+                    body: text.text(),
+                    hidden:"1",
+                    sms_body:"",
+                    do_not_email:"1"
+                },function(){
+                    addComment.manager.parent().emit("back");
+                    addComment.manager.parent().emit("back");
+                    ticketLayout.manager.emit("update", ticket, true);
+                },function(){
+                    console.log(arguments)
+                });
             });
             previewComment.manager.emit("setup");
         });
