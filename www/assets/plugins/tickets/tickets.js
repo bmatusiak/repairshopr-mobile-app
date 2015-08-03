@@ -23,11 +23,19 @@ define(function() {
 
         changeTicketStatus.manager.on("update", function(ticket) {
             changeTicketStatus.manager.emit("clear");
-
-            //changeTicketStatus.manager.emit("addItem","Resolved");
-            changeTicketStatus.manager.emit("addItem", "Waiting On Part");
-            changeTicketStatus.manager.emit("addItem", "In Progress");
-            changeTicketStatus.manager.emit("addItem", "Ready for Pickup");
+            var statuss = ["Waiting On Part","In Progress","Ready for Pickup","Resolved"];
+            for (var i = 0; i < statuss.length; i++) {
+                changeTicketStatus.manager.emit("addItem", statuss[i],(function(status){
+                    api.put("/tickets/"+ticket.id,{
+                        status: status
+                    },function(){
+                        addComment.manager.parent().emit("back");
+                        ticketLayout.manager.emit("update", ticket, true);
+                    },function(){
+                        console.log(arguments);
+                    });
+                }).bind({},statuss[i]) );
+            }
 
             changeTicketStatus.manager.emit("setup");
         });
@@ -265,24 +273,30 @@ define(function() {
         });
 
         ticketsList.manager.on("show", function(keepData) {
-            //if (!keepData) {
-                ticketsList.manager.emit("clear");
-                ticketsList.manager.parent().emit("loading");
+            ticketsList.manager.emit("clear");
+            ticketsList.manager.parent().emit("loading");
 
-                $.get("https://"+settings.get("domain")+".repairshopr.com/api/v1/tickets.json", {
-                    api_key: settings.get("api_key"),
-                    status: "Not Closed"
-                }).done(function(data) {
+            getTicketsList(function(data){
 
-                    ticketsList.manager.parent().emit("doneLoading");
+                ticketsList.manager.parent().emit("doneLoading");
 
-                    ticketsList.manager.emit("update", data.tickets);
+                ticketsList.manager.emit("update", data.tickets);
 
-                }).fail(function(er) {
-
-                });
-            //}
+            });
         });
+
+        function getTicketsList(callback){
+            api.get("/tickets", {
+                status: "Not Closed"
+            },function(data){
+                if(!data.tickets.length)
+                    api.get("/tickets", {},function(data){
+                        callback(data);
+                    });
+                else
+                    callback(data);
+            });
+        }
 
 
         imports.mainLayout.startList.manager.emit("addItem",function(){

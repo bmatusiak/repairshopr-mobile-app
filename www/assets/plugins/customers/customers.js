@@ -18,7 +18,7 @@ define(function() {
       return date.toDateString() + ", " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
     }
 
-    /*
+
     var addTicket = factory.createList("addTicket");
     addTicket.manager.on("update", function(customer) {
       addTicket.manager.emit("clear");
@@ -33,18 +33,20 @@ define(function() {
           subject: "ticket subject",
           status: "New Status",
           problem_type: "some problem_type",
-          "comments.body": "comment body",
-          "comments_subject": "comment subject"
+          comments : [{
+            body: "comment body",
+            subject: "comment subject"
+          }]
         }, function(data) {
-          console.log(data)
+          console.log(data);
         }, function() {
-          console.log(arguments)
+          console.log(arguments);
         });
       });
       addTicket.manager.emit("setup");
     });
     addTicket.manager.parent(imports.mainLayout.mainPage.manager);
-    */
+
     /****       ****/
     var customerView = factory.createList("customerView");
 
@@ -64,12 +66,12 @@ define(function() {
         customer_assets.customer_assetsList.manager.emit("update", customer);
         customer_assets.customer_assetsList.manager.show();
       });
-      /*
+/*
       customerView.manager.emit("addItem", "Create Ticket", function() {
         addTicket.manager.emit("update", customer);
         addTicket.manager.show();
       });
-      */
+*/
       customerView.manager.emit("setup");
     });
 
