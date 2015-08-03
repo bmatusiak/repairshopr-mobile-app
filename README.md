@@ -33,4 +33,4 @@ __iOS__
 
 [GapDebug](https://www.genuitec.com/products/gapdebug/download/)
 
-node-webkit info for debugging will be added soon
+node-webkit info for debugging will be added soon.
