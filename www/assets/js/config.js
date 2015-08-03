@@ -12,6 +12,11 @@ define(["architect"], function(architect) {
         "plugins/customers/customers",
         "plugins/api/api",
         
+        "plugins/appointments/appointments",
+        "plugins/invoices/invoices",
+        "plugins/payments/payments",
+        "plugins/leads/leads",
+        
         
     ], function(err, config) {
         if (err) {console.log(err);throw err;}
