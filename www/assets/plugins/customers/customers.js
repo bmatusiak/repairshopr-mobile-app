@@ -85,28 +85,15 @@ define(function() {
 
     var customersList = factory.createList("customersList");
 
-    var customerSearchForm = $("<form/>");
-    customerSearchForm.submit(function(e) {
-      e.preventDefault()
-    });
-    var customerSearchDiv = $("<div/>");
-    customerSearchDiv.addClass("ui-input-search ui-shadow-inset ui-input-has-clear ui-body-a ui-corner-all");
-    var customerSearchInput = $("<input/>");
-    customerSearchForm.append(customerSearchDiv);
-    customerSearchDiv.append(customerSearchInput);
-    customersList.manager.emit("addItem", customerSearchForm, false, true, true);
-    var updating = false;
-    var doAgain = false;
-    var doUpdate = function() {
-      if (!updating) {
-        if(customerSearchInput.val() == ""){
+    customersList.manager.searchable(function(val, done){
+       if(val == ""){
           updateBasicList();
+          done();
           return;
         }
-        updating = true;
         customersList.manager.emit("clear");
         api.get("/customers/autocomplete", {
-          query: customerSearchInput.val()
+          query: val
         }, function(data) {
           customersList.manager.emit("clear");
           for (var i in data.customers) {
@@ -119,19 +106,11 @@ define(function() {
           }
           customersList.manager.emit("setup");
         }, function() {
+            //api errors,,  youknow somthing thats not statusCode 200
+        }, done);
+    });
 
-        }, function() {
-          updating = false;
-          if (doAgain) {
-            doAgain = false;
-            doUpdate();
-          }
-        });
-      }
-      else doAgain = true;
-    }
 
-    customerSearchInput.on("keyup", doUpdate);
 
     function updateBasicList(){
       api.get("/customers", {}, function(data) {

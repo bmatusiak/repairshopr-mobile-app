@@ -100,6 +100,38 @@ define(["events"], function(events) {
                 args.unshift("start");
                 parent.emit.apply(parent, args);
             };
+
+            listEvents.searchable = function(doSearch){
+                var searchForm = $("<form/>");
+                searchForm.submit(function(e) {
+                  e.preventDefault();
+                });
+                var searchDiv = $("<div/>");
+                searchDiv.addClass("ui-input-search ui-shadow-inset ui-input-has-clear ui-body-a ui-corner-all");
+                var searchInput = $("<input/>");
+                searchForm.append(searchDiv);
+                searchDiv.append(searchInput);
+                listEvents.emit("addItem", searchForm, false, true, true);
+                var updating = false;
+                var doAgain = false;
+                var doAlways = function() {
+                      updating = false;
+                      if (doAgain) {
+                        doAgain = false;
+                        doUpdate();
+                      }
+                    };
+                var doUpdate = function() {
+                  if (!updating) {
+                    updating = true;
+                    doSearch(searchInput.val(),doAlways);
+                  }
+                  else doAgain = true;
+                };
+
+                searchInput.on("keyup", doUpdate);
+            };
+
             return listEvents;
         };
 

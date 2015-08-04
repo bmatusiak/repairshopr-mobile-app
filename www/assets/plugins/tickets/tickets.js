@@ -282,32 +282,26 @@ define(function() {
                             if(ticket.status == "Customer Reply"){
                                 li.find("a").css("background-color","rgba(255, 0, 0, 0.27)");//red
                                 li.find("a").css("text-shadow", "0 0");
-                                console.log(li)
                             }
                             if(ticket.status == "In Progress"){
                                 li.find("a").css("background-color","rgba(0, 255, 0, 0.27)");//green
                                 li.find("a").css("text-shadow", "0 0");
-                                console.log(li)
                             }
                             if(ticket.status == "New"){
                                 li.find("a").css("background-color","rgba(0, 0, 255, 0.27)");//blue
                                 li.find("a").css("text-shadow", "0 0");
-                                console.log(li)
                             }
                             if(ticket.status == "Invoiced"){
                                 li.find("a").css("background-color","rgba(255, 255, 0, 0.27)");//yellow
                                 li.find("a").css("text-shadow", "0 0");
-                                console.log(li)
                             }
                             if(ticket.status == "Waiting on Customer"){
                                 li.find("a").css("background-color","rgba(0, 255, 255, 0.27)");//teal
                                 li.find("a").css("text-shadow", "0 0");
-                                console.log(li)
                             }
                             if(ticket.status == "Waiting for Parts"){
                                 li.find("a").css("background-color","rgba(255, 0, 255, 0.27)");//purple
                                 li.find("a").css("text-shadow", "0 0");
-                                console.log(li)
                             }
                         }
                     })(ticket));
