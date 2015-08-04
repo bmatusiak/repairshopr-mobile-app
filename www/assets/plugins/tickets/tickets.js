@@ -23,7 +23,7 @@ define(function() {
 
         changeTicketStatus.manager.on("update", function(ticket) {
             changeTicketStatus.manager.emit("clear");
-            var statuss = ["Waiting On Part","In Progress","Ready for Pickup","Resolved"];
+            var statuss = ["Waiting for Parts","In Progress","Ready for Pickup","Resolved"];
             changeTicketStatus.manager.emit("addItem", "<b>" + ticket.number + " - [" + ticket.status + "] " + ticket.customer_business_then_name + "</b> <span style='float: right;font-weight: bold;'>"+ ticket.subject+"</span><br>" + ticket.problem_type + " - " + formatDate(ticket.updated_at));
             for (var i = 0; i < statuss.length; i++) {
                 changeTicketStatus.manager.emit("addItem", statuss[i],(function(status){
@@ -280,17 +280,32 @@ define(function() {
                     ticketsList_OnTouch.bind({}, ticket),false,false,(function(ticket){
                         return function(li){
                             if(ticket.status == "Customer Reply"){
-                                li.find("a").css("background-color","rgba(255, 0, 0, 0.27)");
+                                li.find("a").css("background-color","rgba(255, 0, 0, 0.27)");//red
                                 li.find("a").css("text-shadow", "0 0");
                                 console.log(li)
                             }
                             if(ticket.status == "In Progress"){
-                                li.find("a").css("background-color","rgba(0, 255, 0, 0.27)");
+                                li.find("a").css("background-color","rgba(0, 255, 0, 0.27)");//green
                                 li.find("a").css("text-shadow", "0 0");
                                 console.log(li)
                             }
                             if(ticket.status == "New"){
-                                li.find("a").css("background-color","rgba(0, 0, 255, 0.27)");
+                                li.find("a").css("background-color","rgba(0, 0, 255, 0.27)");//blue
+                                li.find("a").css("text-shadow", "0 0");
+                                console.log(li)
+                            }
+                            if(ticket.status == "Invoiced"){
+                                li.find("a").css("background-color","rgba(255, 255, 0, 0.27)");//yellow
+                                li.find("a").css("text-shadow", "0 0");
+                                console.log(li)
+                            }
+                            if(ticket.status == "Waiting on Customer"){
+                                li.find("a").css("background-color","rgba(0, 255, 255, 0.27)");//teal
+                                li.find("a").css("text-shadow", "0 0");
+                                console.log(li)
+                            }
+                            if(ticket.status == "Waiting for Parts"){
+                                li.find("a").css("background-color","rgba(255, 0, 255, 0.27)");//purple
                                 li.find("a").css("text-shadow", "0 0");
                                 console.log(li)
                             }
