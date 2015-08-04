@@ -329,7 +329,7 @@ define(function() {
         });
 
         ticketsList.manager.on("show", function(keepData) {
-            if(!keepData){
+            //if(!keepData){
                 ticketsList.manager.emit("clear");
                 ticketsList.manager.parent().emit("loading");
 
@@ -340,7 +340,7 @@ define(function() {
                     ticketsList.manager.emit("update", data.tickets);
 
                 });
-            }
+            //}
         });
 
         function getTicketsList(callback){
