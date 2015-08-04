@@ -23,7 +23,7 @@ define(function() {
 
         changeTicketStatus.manager.on("update", function(ticket) {
             changeTicketStatus.manager.emit("clear");
-            var statuss = ["New","Waiting for Parts","Waiting on Customer","In Progress","Ready for Pickup","Resolved"];
+            var statuss = ["New","Waiting for Parts","Waiting on Customer","In Progress","Waiting For Pickup","Resolved"];
             changeTicketStatus.manager.emit("addItem", "<b>" + ticket.number + " - [" + ticket.status + "] " + ticket.customer_business_then_name + "</b> <span style='float: right;font-weight: bold;'>"+ ticket.subject+"</span><br>" + ticket.problem_type + " - " + formatDate(ticket.updated_at));
             for (var i = 0; i < statuss.length; i++) {
                 changeTicketStatus.manager.emit("addItem", statuss[i],(function(status){
