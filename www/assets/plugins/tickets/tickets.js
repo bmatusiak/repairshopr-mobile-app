@@ -248,6 +248,24 @@ define(function() {
         })();
 
 
+        ticketsList.manager.searchable(function(val, done){
+           if(val == ""){
+              getTicketsList(function(data){
+                    ticketsList.manager.emit("update", data.tickets);
+                    done();
+                });
+              return;
+            }
+            ticketsList.manager.emit("clear");
+            api.get("/tickets", {
+              number: val
+            }, function(data) {
+              ticketsList.manager.emit("update", data.tickets);
+            }, function() {
+                //api errors,,  youknow somthing thats not statusCode 200
+            }, done);
+        });
+
         ticketsList.manager.on("update", function(tickets) {
             tickets.sort(function compare(a, b) {
                 var timeB = new Date(a.updated_at).getTime();
@@ -311,16 +329,18 @@ define(function() {
         });
 
         ticketsList.manager.on("show", function(keepData) {
-            ticketsList.manager.emit("clear");
-            ticketsList.manager.parent().emit("loading");
+            if(!keepData){
+                ticketsList.manager.emit("clear");
+                ticketsList.manager.parent().emit("loading");
 
-            getTicketsList(function(data){
+                getTicketsList(function(data){
 
-                ticketsList.manager.parent().emit("doneLoading");
+                    ticketsList.manager.parent().emit("doneLoading");
 
-                ticketsList.manager.emit("update", data.tickets);
+                    ticketsList.manager.emit("update", data.tickets);
 
-            });
+                });
+            }
         });
 
         function getTicketsList(callback){
