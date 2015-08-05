@@ -6,7 +6,7 @@
         id        = "com.github.bmatusiak.repairshopr-mobile-app"
         version   = "0.0.7">
 
-    <name>Repairshopr</name>
+    <name>RepairShopr</name>
 
     <description>
         RepairShopr Mobile App for http://www.repairshopr.com/
