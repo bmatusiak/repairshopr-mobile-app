@@ -152,19 +152,17 @@ define(function() {
 
                 ticketsList.manager.parent().emit("loading");
                 var customer = ticket.customer;
-                $.get("https://"+settings.get("domain")+".repairshopr.com/api/v1/tickets", {
-                    api_key: settings.get("api_key"),
+                api.get("/tickets", {
                     number: ticket.number
-                }).done(function(data) {
+                }, function(data) {
                     if(data.tickets && data.tickets[0]){
                         ticket = data.tickets[0];
                         ticket.customer = customer;
                     }
                     parseTicket();
-                }).fail(function(er) {
+                }, function(er) {
                    parseTicket();
-                })
-                .always(function() {
+                } ,function() {
                     ticketsList.manager.parent().emit("doneLoading");
                 });
             }
@@ -212,17 +210,11 @@ define(function() {
         });
 
         function loadCustomer(ticket,done,fail,always){
-             $.get("https://"+settings.get("domain")+".repairshopr.com/api/v1/customers/" + ticket.customer_id, {
-                    api_key: settings.get("api_key")
-                }).done(function(data) {
+             api.get("/customers/" + ticket.customer_id, {
+                }, function(data) {
                     ticket.customer = data.customer;
                     done(data);
-                }).fail(function(er) {
-                    fail(er);
-                })
-                .always(function() {
-                    always();
-                });
+                },fail, always);
         }
 
         function ticketsList_OnTouch(ticket) {
