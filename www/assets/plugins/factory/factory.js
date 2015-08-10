@@ -111,7 +111,11 @@ define(["events"], function(events) {
                 var searchInput = $("<input/>");
                 searchForm.append(searchDiv);
                 searchDiv.append(searchInput);
-                listEvents.emit("addItem", searchForm, false, true, true);
+
+                var renderedLI;
+                listEvents.emit("addItem", searchForm, false, true, true,function(LI){
+                    renderedLI = LI;
+                });
                 var updating = false;
                 var doAgain = false;
                 var doAlways = function() {
@@ -130,6 +134,14 @@ define(["events"], function(events) {
                 };
 
                 searchInput.on("keyup", doUpdate);
+                return {
+                    hide:function(){
+                        if(renderedLI) renderedLI.hide();
+                    },
+                    show:function(){
+                        if(renderedLI) renderedLI.show();
+                    }
+                };
             };
 
             return listEvents;

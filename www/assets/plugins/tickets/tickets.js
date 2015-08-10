@@ -23,23 +23,27 @@ define(function() {
 
         changeTicketStatus.manager.on("update", function(ticket) {
             changeTicketStatus.manager.emit("clear");
-            var statuss = ["New","Waiting for Parts","Waiting on Customer","In Progress","Waiting For Pickup","Resolved"];
-            changeTicketStatus.manager.emit("addItem", "<b>" + ticket.number + " - [" + ticket.status + "] " + ticket.customer_business_then_name + "</b> <span style='float: right;font-weight: bold;'>"+ ticket.subject+"</span><br>" + ticket.problem_type + " - " + formatDate(ticket.updated_at));
-            for (var i = 0; i < statuss.length; i++) {
-                changeTicketStatus.manager.emit("addItem", statuss[i],(function(status){
-                    if(!window.confirm("Are your sure?")) return;
-                    api.put("/tickets/"+ticket.id,{
-                        status: status
-                    },function(){
-                        addComment.manager.parent().emit("back");
-                        ticketLayout.manager.emit("update", ticket, true);
-                    },function(){
-                        console.log(arguments);
-                    });
-                }).bind({},statuss[i]) );
-            }
+            api.get("/tickets/settings",{},function(data){
+                //var statuss = ["New","Waiting for Parts","Waiting on Customer","In Progress","Waiting For Pickup","Resolved"];
+                var statuss = data.ticket_status_list;
+                changeTicketStatus.manager.emit("addItem", "<b>" + ticket.number + " - [" + ticket.status + "] " + ticket.customer_business_then_name + "</b> <span style='float: right;font-weight: bold;'>"+ ticket.subject+"</span><br>" + ticket.problem_type + " - " + formatDate(ticket.updated_at));
+                for (var i = 0; i < statuss.length; i++) {
+                    changeTicketStatus.manager.emit("addItem", statuss[i],(function(status){
+                        if(!window.confirm("Are your sure?")) return;
+                        api.put("/tickets/"+ticket.id,{
+                            status: status
+                        },function(){
+                            addComment.manager.parent().emit("back");
+                            ticketLayout.manager.emit("update", ticket, true);
+                        },function(){
+                            console.log(arguments);
+                        });
+                    }).bind({},statuss[i]) );
+                }
 
-            changeTicketStatus.manager.emit("setup");
+                changeTicketStatus.manager.emit("setup");
+
+            })
         });
 
         changeTicketStatus.manager.on("show", function(keepData) {
@@ -248,8 +252,9 @@ define(function() {
         })();
 
 
-        ticketsList.manager.searchable(function(val, done){
+        var ticketSearch = ticketsList.manager.searchable(function(val, done){
            if(val == ""){
+               ticketsList.manager.emit("clear");
               getTicketsList(function(data){
                     ticketsList.manager.emit("update", data.tickets);
                     done();
@@ -266,7 +271,11 @@ define(function() {
             }, done);
         });
 
-        ticketsList.manager.on("update", function(tickets) {
+        ticketsList.manager.on("update", function(tickets,hideSearch) {
+            if(hideSearch)
+                ticketSearch.hide();
+            else
+                ticketSearch.show();
             tickets.sort(function compare(a, b) {
                 var timeB = new Date(a.updated_at).getTime();
                 var timeA = new Date(b.updated_at).getTime();
@@ -328,26 +337,32 @@ define(function() {
             ticketsList.manager.emit("setup");
         });
 
-        ticketsList.manager.on("show", function(keepData) {
+        ticketsList.manager.on("show", function(keepData,customer_id,hideSearch) {
             //if(!keepData){
                 ticketsList.manager.emit("clear");
                 ticketsList.manager.parent().emit("loading");
 
-                getTicketsList(function(data){
+                getTicketsList(customer_id,function(data){
 
                     ticketsList.manager.parent().emit("doneLoading");
 
-                    ticketsList.manager.emit("update", data.tickets);
+                    ticketsList.manager.emit("update", data.tickets, hideSearch);
 
                 });
             //}
         });
 
-        function getTicketsList(callback){
-            api.get("/tickets", {
-                status: "Not Closed"
-            },function(data){
-                if(!data.tickets.length)
+        function getTicketsList(customer_id,callback){
+            var data = { status: "Not Closed" };
+            var getall_onNone = true;
+            if(!callback){
+                callback = customer_id;
+            }else if(customer_id){
+                data = {customer_id:customer_id};
+                getall_onNone = false;
+            }
+            api.get("/tickets", data ,function(data){
+                if(!data.tickets.length && getall_onNone)
                     api.get("/tickets", {},function(data){
                         callback(data);
                     });
@@ -367,7 +382,10 @@ define(function() {
         register(null, {
             tickets: {
                 ticketLayout: ticketLayout,
-                ticketsListLayout: ticketsList
+                ticketsListLayout: ticketsList,
+                getTicketsList:getTicketsList,
+                loadCustomer:loadCustomer,
+                showTicket:ticketsList_OnTouch
             }
         });
     }

@@ -3,16 +3,16 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 	<script>
-	delete window.require;	
+	delete window.require;
 	//delete window.global.require;
 	</script>
     <script src='assets/jquery-mobile/jquery-2.1.4.min.js'></script>
     <script src='assets/jquery-mobile/jquery.mobile-1.4.5.js'></script>
     <link rel="stylesheet" href="assets/jquery-mobile/jquery.mobile-1.4.5.min.css">
-    
-    
- 
-     
+
+
+
+
     <script data-main="assets/js/start" src='assets/lib/require.js'></script>
 
 </head>
@@ -28,7 +28,7 @@
 
 <body>
 
-    
+
     <div data-role="page">
 
         <div data-role="panel" id="mypanel">
@@ -40,10 +40,13 @@
         <div data-role="header" style="overflow:hidden;" data-id="header1" data-position="fixed">
             <a data-icon="back" id="back" class="ui-btn-left">&nbsp;</a>
             <h1 style="overflow: visible;padding:0;text-align: left;"><img style="height: 40px;" src="assets/logo.png" /></h1>
+            <a data-icon="gear" class="ui-btn-right" style="display:none;">&nbsp;</a>
+            <a data-icon="plus" class="ui-btn-right" style="display:none;">&nbsp;</a>
+
             <!-- <a data-icon="gear" class="ui-btn-right" href="#popupMenu" data-rel="popup">&nbsp;</a> -->
         </div>
         <!-- /header -->
-	
+
         <div data-role="popup" id="popupMenu" data-theme="b">
             <ul data-role="listview" data-inset="true" style="min-width:210px;">
                 <li data-role="list-divider">Choose an action</li>
@@ -74,12 +77,12 @@
         </div>
 
         <div role="main" class="ui-content" id="mainContent"></div>
-	
+
     </div>
     <!-- page -->
-    
 
-    
+
+
 </body>
 
 </html>
