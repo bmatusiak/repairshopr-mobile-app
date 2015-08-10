@@ -15,6 +15,12 @@ __This app uses__
 __Development stuff__
 *  [phonegap](http://phonegap.com/)
 
+# TODO:
+
+* Plugin Support
+* Camera Support
+* Notification Support
+
 # Running the project
 
 __Andorid & Windows Phone__
