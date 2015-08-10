@@ -3,7 +3,7 @@ define(function() {
 
   plugin.provides = ["customers"];
 
-  plugin.consumes = ["factory", "settings", "mainLayout", "api", "customer_assets","hub","tools"];
+  plugin.consumes = ["factory", "settings", "mainLayout", "api", "customer_assets", "hub", "tools"];
 
   return plugin;
 
@@ -16,12 +16,25 @@ define(function() {
 
     var tickets;
 
-    imports.hub.on("service", function(name, service){
-      if(name == "tickets"){
-          tickets = service;
+    imports.hub.on("service", function(name, service) {
+      if (name == "tickets") {
+        tickets = service;
       }
     });
 
+
+
+    var addEditCustomer = factory.createList("addEditCustomer");
+
+    addEditCustomer.manager.on("update", function(customer) {
+      addEditCustomer.manager.emit("clear");
+
+      addEditCustomer.manager.emit("setup");
+
+    });
+    addEditCustomer.manager.parent(imports.mainLayout.mainPage.manager);
+
+    /****       ****/
     var addTicket = factory.createList("addTicket");
 
     addTicket.manager.on("update", function(customer) {
@@ -31,9 +44,9 @@ define(function() {
       var customerTitle = $("<b/>");
       customerTitle.text(customer.fullname);
 
-      addTicket.manager.emit("addItem", customerTitle );
+      addTicket.manager.emit("addItem", customerTitle);
 
-       var ticketTitleContainer = $("<div/>");
+      var ticketTitleContainer = $("<div/>");
 
       var ticketTitle = $("<b/>");
       ticketTitle.text("Ticket Title (short description):");
@@ -44,7 +57,7 @@ define(function() {
       ticketTitleInput.css("width", "100%");
       ticketTitleContainer.append(ticketTitleInput);
 
-      addTicket.manager.emit("addItem", ticketTitleContainer );
+      addTicket.manager.emit("addItem", ticketTitleContainer);
 
       var ticketTypeContainer = $("<div/>");
 
@@ -53,23 +66,26 @@ define(function() {
       ticketTypeContainer.append(ticketTypeTitle);
 
       var ticketTypes = {
-            "":"",
-            "Virus" : "Virus",
-            "TuneUp" : "TuneUp",
-            "Hardware" : "Hardware",
-            "Software" : "Software",
-            "Other" : "Other"
+        "": "",
+        "Virus": "Virus",
+        "TuneUp": "TuneUp",
+        "Hardware": "Hardware",
+        "Software": "Software",
+        "Other": "Other"
       };
 
-      var ticketType = $('<select />');//.find(":selected").text();
+      var ticketType = $('<select />'); //.find(":selected").text();
       ticketType.css("width", "100%");
-      for(var val in ticketTypes) {
-          $('<option />', {value: val, text: ticketTypes[val]}).appendTo(ticketType);
+      for (var val in ticketTypes) {
+        $('<option />', {
+          value: val,
+          text: ticketTypes[val]
+        }).appendTo(ticketType);
       }
       ticketTypeContainer.append(ticketType);
       ticketType.selectmenu();
 
-      addTicket.manager.emit("addItem", ticketTypeContainer );
+      addTicket.manager.emit("addItem", ticketTypeContainer);
 
       var commentBodyContainer = $("<div/>");
 
@@ -83,36 +99,36 @@ define(function() {
       commentBodyInput.css("min-height", "100px");
       commentBodyContainer.append(commentBodyInput);
 
-      addTicket.manager.emit("addItem", commentBodyContainer );
+      addTicket.manager.emit("addItem", commentBodyContainer);
 
       addTicket.manager.emit("addItem", "Create Ticket", function() {
-        if(!confirm("Create Ticket?")) return alert("no");
+        if (!confirm("Create Ticket?")) return alert("no");
         var subject = ticketTitleInput.val();
         var problem_type = ticketType.find(":selected").text();
         var comment_body = commentBodyInput.val();
 
         var error = false;
-        if(subject == ""){
+        if (subject == "") {
           alert("Ticket Title is required!");
           error = true;
         }
-        if(problem_type == ""){
+        if (problem_type == "") {
           alert("Ticket Type is required!");
           error = true;
         }
-        if(comment_body == ""){
+        if (comment_body == "") {
           alert("Description is required!");
           error = true;
         }
-        if(error) return;
+        if (error) return;
 
         api.post("/tickets", {
           customer_id: customer.id,
           subject: subject,
           status: "New",
           problem_type: problem_type,
-          comment_subject : "Initial Issue",
-          comment_body : comment_body
+          comment_subject: "Initial Issue",
+          comment_body: comment_body
         }, function(data) {
           imports.mainLayout.mainPage.manager.emit("back");
           tickets.showTicket(data.ticket);
@@ -133,12 +149,16 @@ define(function() {
       customerView.manager.emit("clear");
 
       customerView.manager.emit("addItem", "Name: <b>" + customer.fullname + "</b>");
-      customerView.manager.emit("addItem", "Email: <b>" + customer.email + "</b>");
-      customerView.manager.emit("addItem", "Phone: <b><a href='tel:"+customer.phone +"'>" + customer.phone + "</a></b>");
-      customerView.manager.emit("addItem", "Mobile: <b><a href='tel:"+customer.mobile +"'>" + customer.mobile + "</a></b>");
+      if (customer.email)
+        customerView.manager.emit("addItem", "Email: <b>" + customer.email + "</b>");
+      if (customer.phone)
+        customerView.manager.emit("addItem", "Phone: <b><a href='tel:" + customer.phone + "'>" + customer.phone + "</a></b>");
+      if (customer.mobile)
+        customerView.manager.emit("addItem", "Mobile: <b><a href='tel:" + customer.mobile + "'>" + customer.mobile + "</a></b>");
       customerView.manager.emit("addItem", "Created: <b>" + tools.format.date(customer.created_at) + "</b>");
-      customerView.manager.emit("addItem", "Address: <b>" + customer.address + "<br/>" + customer.city + ", " + customer.state + " " + customer.zip + "</b>");
-      if(customer.location_name)
+      if (customer.address || customer.city || customer.state || customer.zip)
+        customerView.manager.emit("addItem", "Address: <b>" + customer.address + "<br/>" + customer.city + ", " + customer.state + " " + customer.zip + "</b>");
+      if (customer.location_name)
         customerView.manager.emit("addItem", "Location Name: <b>" + customer.location_name + "</b>");
       customerView.manager.emit("addItem", "Assets", function() {
 
@@ -153,7 +173,7 @@ define(function() {
 
 
       customerView.manager.emit("addItem", "Tickets", function() {
-        tickets.ticketsListLayout.manager.show(false,customer.id,true)
+        tickets.ticketsListLayout.manager.show(false, customer.id, true)
       });
 
       customerView.manager.emit("setup");
@@ -169,46 +189,46 @@ define(function() {
 
     var customersList = factory.createList("customersList");
 
-    customersList.manager.searchable(function(val, done){
-       if(val == ""){
-          updateBasicList();
-          done();
-          return;
-        }
+    customersList.manager.searchable(function(val, done) {
+      if (val == "") {
+        updateBasicList();
+        done();
+        return;
+      }
+      customersList.manager.emit("clear");
+      api.get("/customers/autocomplete", {
+        query: val
+      }, function(data) {
         customersList.manager.emit("clear");
-        api.get("/customers/autocomplete", {
-          query: val
-        }, function(data) {
-          customersList.manager.emit("clear");
-          for (var i in data.customers) {
-            (function(customer) {
-              customersList.manager.emit("addItem", "<b>" + data.customers[i].fullname + "</b>", function() {
-                customerView.manager.emit("update", customer);
-                customerView.manager.show();
-              }, true);
-            })(data.customers[i]);
-          }
-          customersList.manager.emit("setup");
-        }, function() {
-            //api errors,,  youknow somthing thats not statusCode 200
-        }, done);
+        for (var i in data.customers) {
+          (function(customer) {
+            customersList.manager.emit("addItem", "<b>" + data.customers[i].fullname + "</b>", function() {
+              customerView.manager.emit("update", customer);
+              customerView.manager.show();
+            }, true);
+          })(data.customers[i]);
+        }
+        customersList.manager.emit("setup");
+      }, function() {
+        //api errors,,  youknow somthing thats not statusCode 200
+      }, done);
     });
 
 
 
-    function updateBasicList(){
+    function updateBasicList() {
       api.get("/customers", {}, function(data) {
-          customersList.manager.emit("clear");
-          for (var i in data.customers) {
-            (function(customer) {
-              customersList.manager.emit("addItem", "<b>" + data.customers[i].fullname + "</b>", function() {
-                customerView.manager.emit("update", customer);
-                customerView.manager.show();
-              });
-            })(data.customers[i]);
-          }
-          customersList.manager.emit("setup");
-        });
+        customersList.manager.emit("clear");
+        for (var i in data.customers) {
+          (function(customer) {
+            customersList.manager.emit("addItem", "<b>" + data.customers[i].fullname + "</b>", function() {
+              customerView.manager.emit("update", customer);
+              customerView.manager.show();
+            });
+          })(data.customers[i]);
+        }
+        customersList.manager.emit("setup");
+      });
     }
     customersList.manager.on("show", function(keepData) {
       if (!keepData) {
@@ -222,17 +242,22 @@ define(function() {
       customersList.manager.show();
     }, true);
 
-    var addCustomerBtn = $("<span/>",{class:"ui-btn-right",style:"padding: 16px 30px 0px 0px;"});
+    var addCustomerBtn = $("<span/>", {
+      class: "ui-btn-right",
+      style: "padding: 16px 30px 0px 0px;"
+    });
     addCustomerBtn.html("&nbsp;");
     addCustomerBtn.button();
-    addCustomerBtn.buttonMarkup({ icon: "plus" });
+    addCustomerBtn.buttonMarkup({
+      icon: "plus"
+    });
     $("#header").append(addCustomerBtn);
 
-    customersList.manager.on("hide",function(){
-        addCustomerBtn.hide();
+    customersList.manager.on("hide", function() {
+      addCustomerBtn.hide();
     });
-    customersList.manager.on("show",function(){
-        addCustomerBtn.show();
+    customersList.manager.on("show", function() {
+      addCustomerBtn.show();
     });
 
     customersList.manager.parent(imports.mainLayout.mainPage.manager);

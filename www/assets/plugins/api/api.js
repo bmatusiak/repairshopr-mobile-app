@@ -3,7 +3,7 @@ define(function() {
 
 
     plugin.provides = [pluginName];
-    plugin.consumes = ["settings"];
+    plugin.consumes = ["settings","user"];
 
     return plugin;
 
@@ -11,6 +11,8 @@ define(function() {
 
 
         var settings = imports.settings
+        var user = imports.user.get;
+
         $.put = function(url, data, callback, type) {
             if ($.isFunction(data)) {
                 type = type || callback,
@@ -29,16 +31,16 @@ define(function() {
 
         var api = {
             get:function(location,data,done,fail,always){
-                data.api_key = settings.get("api_key");
-                $.get("https://"+settings.get("domain")+".repairshopr.com/api/v1"+location, data).done(done).fail(fail).always(always);
+                data.api_key = user().user_token;
+                $.get("https://"+ user().subdomain+".repairshopr.com/api/v1"+location, data).done(done).fail(fail).always(always);
             },
             put:function(location,data,done,fail,always){
-                data.api_key = settings.get("api_key");
-                $.put("https://"+settings.get("domain")+".repairshopr.com/api/v1"+location, data).done(done).fail(fail).always(always);
+                data.api_key = user().user_token;
+                $.put("https://"+ user().subdomain+".repairshopr.com/api/v1"+location, data).done(done).fail(fail).always(always);
             },
             post:function(location,data,done,fail,always){
-                data.api_key = settings.get("api_key");
-                $.post("https://"+settings.get("domain")+".repairshopr.com/api/v1"+location, data).done(done).fail(fail).always(always);
+                data.api_key = user().user_token;
+                $.post("https://"+ user().subdomain+".repairshopr.com/api/v1"+location, data).done(done).fail(fail).always(always);
             }
         };
 

@@ -12,7 +12,7 @@ define(["events"], function(events) {
     function appPlugin(options, imports, register) {
         var settings = imports.settings;
 
-        var domain = settings.addSetting("domain","Domain");
+        //var domain = settings.addSetting("domain","Domain");
         var api_key = settings.addSetting("api_key","API_KEY");
         var username = settings.addSetting("username","UserName");
 
@@ -20,7 +20,7 @@ define(["events"], function(events) {
 
         function getApiKey(username, password, callback) {
             //done use api plugin becuase it doest have have a user_token yet!
-            $.post("https://"+domain()+".repairshopr.com/api/v1/sign_in", {
+            $.post("https://admin.repairshopr.com/api/v1/sign_in", {
                 email: username,
                 password: password
             }).done(function(data) {
@@ -63,11 +63,11 @@ define(["events"], function(events) {
             }
         };
 
-        $("#login_domain").val(domain());
+       // $("#login_domain").val(domain());
         $("#login_un").val(username());
 
         $("#popupLogin").submit(function(e) {
-            domain($("#login_domain").val());
+            //domain($("#login_domain").val());
             username($("#login_un").val());
             var password = $("#login_pw").val();
             $("#login_pw").val("");
