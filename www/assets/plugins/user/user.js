@@ -5,7 +5,7 @@ define(["events"], function(events) {
 
     var pluginEvents = new EventEmitter();
 
-    appPlugin.provides = ["login", "logout"];
+    appPlugin.provides = ["login", "logout","user"];
     appPlugin.consumes = ["settings","mainLayout","factory"];
     return appPlugin;
 
@@ -16,11 +16,15 @@ define(["events"], function(events) {
         var api_key = settings.addSetting("api_key","API_KEY");
         var username = settings.addSetting("username","UserName");
 
+        var userProfile = {};
+
         function getApiKey(username, password, callback) {
+            //done use api plugin becuase it doest have have a user_token yet!
             $.post("https://"+domain()+".repairshopr.com/api/v1/sign_in", {
                 email: username,
                 password: password
             }).done(function(data) {
+                userProfile = data;
                 callback(null, data.user_token);
             }).fail(function(er) {
                 callback(true);
@@ -28,6 +32,9 @@ define(["events"], function(events) {
         }
 
         var plugin = {
+            user:{get:function(){
+                return userProfile;
+            }},
             login: {
                 show:function (){
                      $( "#popupLogin" ).popup( "open" );

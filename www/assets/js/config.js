@@ -7,7 +7,7 @@ define(["architect"], function(architect) {
         "plugins/factory/factory",
         "plugins/events/events",
         "plugins/settings/settings",
-        "plugins/login/login",
+        "plugins/user/user",
         "plugins/tickets/tickets",
         "plugins/customers/customers",
         "plugins/customers/customer_assets",
