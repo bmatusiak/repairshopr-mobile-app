@@ -79,7 +79,7 @@ define(["events"], function(events) {
         });
 
 
-        imports.mainLayout.startList.manager.emit("addItem",function(){
+        imports.mainLayout.startPanel.manager.emit("addItem",function(){
             return "Logout";
         },function(){
             plugin.logout.start();

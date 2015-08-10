@@ -36,7 +36,7 @@ define(function(events) {
         });
 
         var mainPanel = plugin.mainPanel =factory.managePage("#mainPanel");
-        var startPanel = plugin.startPanel = factory.createList("startPanel");
+        var startPanel = plugin.startPanel = factory.createList("startPanel",false,"b");
         startPanel.manager.parent(mainPanel.manager);
         startPanel.manager.on("itemClick",function(){
             mainPanel.panel("close");
