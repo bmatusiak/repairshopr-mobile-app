@@ -3,7 +3,7 @@ define(function() {
 
   plugin.provides = ["customers"];
 
-  plugin.consumes = ["factory", "settings", "mainLayout", "api", "customer_assets","hub"];
+  plugin.consumes = ["factory", "settings", "mainLayout", "api", "customer_assets","hub","tools"];
 
   return plugin;
 
@@ -12,6 +12,7 @@ define(function() {
     var factory = imports.factory;
     var api = imports.api;
     var customer_assets = imports.customer_assets;
+    var tools = imports.tools;
 
     var tickets;
 
@@ -20,12 +21,6 @@ define(function() {
           tickets = service;
       }
     });
-
-    function formatDate(Adate) {
-      var date = new Date(Adate);
-      return date.toDateString() + ", " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-    }
-
 
     var addTicket = factory.createList("addTicket");
 
@@ -140,8 +135,8 @@ define(function() {
       customerView.manager.emit("addItem", "Name: <b>" + customer.fullname + "</b>");
       customerView.manager.emit("addItem", "Email: <b>" + customer.email + "</b>");
       customerView.manager.emit("addItem", "Phone: <b><a href='tel:"+customer.phone +"'>" + customer.phone + "</a></b>");
-      customerView.manager.emit("addItem", "Mobile: <b>" + customer.mobile + "</b>");
-      customerView.manager.emit("addItem", "Created: <b>" + customer.created_at + "</b>");
+      customerView.manager.emit("addItem", "Mobile: <b><a href='tel:"+customer.mobile +"'>" + customer.mobile + "</a></b>");
+      customerView.manager.emit("addItem", "Created: <b>" + tools.format.date(customer.created_at) + "</b>");
       customerView.manager.emit("addItem", "Address: <b>" + customer.address + "<br/>" + customer.city + ", " + customer.state + " " + customer.zip + "</b>");
       if(customer.location_name)
         customerView.manager.emit("addItem", "Location Name: <b>" + customer.location_name + "</b>");

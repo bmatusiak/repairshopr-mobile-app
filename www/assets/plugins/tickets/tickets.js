@@ -3,7 +3,7 @@ define(function() {
 
     plugin.provides = ["tickets"];
 
-    plugin.consumes = ["factory", "settings","mainLayout","customers","api"];
+    plugin.consumes = ["factory", "settings","mainLayout","customers","api","tools"];
 
     return plugin;
 
@@ -12,10 +12,7 @@ define(function() {
         var factory = imports.factory;
         var customers = imports.customers;
         var api = imports.api;
-        function formatDate(Adate) {
-            var date = new Date(Adate);
-            return date.toDateString() + ", " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-        }
+        var formatDate = imports.tools.format.date;
 
         /****       ****/
         var changeTicketStatus = factory.createList("changeTicketStatus");

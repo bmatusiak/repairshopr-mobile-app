@@ -10,15 +10,14 @@ define(["architect"], function(architect) {
         "plugins/login/login",
         "plugins/tickets/tickets",
         "plugins/customers/customers",
-        "plugins/api/api",
-
-        "plugins/appointments/appointments",
-        "plugins/invoices/invoices",
-        "plugins/payments/payments",
-        "plugins/leads/leads",
-
         "plugins/customers/customer_assets",
+        "plugins/api/api",
+        "plugins/tools/tools",
 
+        //"plugins/appointments/appointments",
+        //"plugins/invoices/invoices",
+        //"plugins/payments/payments",
+        //"plugins/leads/leads",
 
     ], function(err, config) {
         if (err) {console.log(err);throw err;}
