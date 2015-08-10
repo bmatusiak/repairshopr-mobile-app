@@ -222,6 +222,18 @@ define(function() {
       customersList.manager.show();
     }, true);
 
+    var addCustomerBtn = $("<span/>",{class:"ui-btn-right",style:"padding: 16px 30px 0px 0px;"});
+    addCustomerBtn.html("&nbsp;");
+    addCustomerBtn.button();
+    addCustomerBtn.buttonMarkup({ icon: "plus" });
+    $("#header").append(addCustomerBtn);
+
+    customersList.manager.on("hide",function(){
+        addCustomerBtn.hide();
+    });
+    customersList.manager.on("show",function(){
+        addCustomerBtn.show();
+    });
 
     customersList.manager.parent(imports.mainLayout.mainPage.manager);
     customerView.manager.parent(imports.mainLayout.mainPage.manager);

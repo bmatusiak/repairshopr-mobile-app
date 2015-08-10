@@ -28,33 +28,15 @@
 
 <body>
 
-
     <div data-role="page">
 
-        <div data-role="panel" id="mypanel">
-            <!-- panel content goes here -->
-        </div>
-        <!-- /panel -->
 
 
-        <div data-role="header" style="overflow:hidden;" data-id="header1" data-position="fixed">
-            <a data-icon="back" id="back" class="ui-btn-left">&nbsp;</a>
+        <div data-role="header" style="overflow:hidden;" data-id="header1" data-position="fixed" id="header">
+            <a data-icon="back" id="back" class="ui-btn-left" style="padding: 16px 30px 0px 0px;">&nbsp;</a>
             <h1 style="overflow: visible;padding:0;text-align: left;"><img style="height: 40px;" src="assets/logo.png" /></h1>
-            <a data-icon="gear" class="ui-btn-right" style="display:none;">&nbsp;</a>
-            <a data-icon="plus" class="ui-btn-right" style="display:none;">&nbsp;</a>
 
             <!-- <a data-icon="gear" class="ui-btn-right" href="#popupMenu" data-rel="popup">&nbsp;</a> -->
-        </div>
-        <!-- /header -->
-
-        <div data-role="popup" id="popupMenu" data-theme="b">
-            <ul data-role="listview" data-inset="true" style="min-width:210px;">
-                <li data-role="list-divider">Choose an action</li>
-                <li><a href="#">View details</a></li>
-                <li><a href="#">Edit</a></li>
-                <li><a href="#">Disable</a></li>
-                <li><a href="#">Delete</a></li>
-            </ul>
         </div>
 
 
@@ -77,6 +59,12 @@
         </div>
 
         <div role="main" class="ui-content" id="mainContent"></div>
+
+
+        <div data-role="panel" data-position="right" id="mainPanel">
+            <!-- panel content goes here -->
+        </div>
+        <!-- /panel -->
 
     </div>
     <!-- page -->

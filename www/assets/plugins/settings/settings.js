@@ -71,7 +71,7 @@ define(function () {
         pluginEvents.addSetting("location","Location ID",true);
 
         //add settings item to main layout
-        imports.mainLayout.startList.manager.emit("addItem","Settings",function() {
+        imports.mainLayout.startPanel.manager.emit("addItem","Settings",function() {
             settingsList.manager.emit("setup");
             settingsList.manager.show();
         },true);

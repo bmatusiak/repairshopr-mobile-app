@@ -65,7 +65,7 @@ define(["events"], function(events) {
                     var li =$("<li/>",{
                         perm:(perm ? "true" : "false"),
                         "data-icon":(onClick ? undefined : false)
-                    }).append($("<a/>").click(onClick).html(body));
+                    }).append($("<a/>").click(onClick).click(function(){listEvents.emit("itemClick",li)}).html(body));
 
                     if(parsed)
                         parsed(li);
@@ -91,6 +91,7 @@ define(["events"], function(events) {
                 var args = argsToArr(arguments);
                 args.unshift(listView.manager.id);
                 args.unshift("next");
+                if(parent)
                 parent.emit.apply(parent, args);
             };
 
@@ -98,6 +99,7 @@ define(["events"], function(events) {
                 var args = argsToArr(arguments);
                 args.unshift(listView.manager.id);
                 args.unshift("start");
+                if(parent)
                 parent.emit.apply(parent, args);
             };
 
@@ -265,14 +267,15 @@ define(["events"], function(events) {
                     ManagePage(container, $container);
                     return $container;
                 },
-                createList: function(id,data) {
+                createList: function(id,data,theme) {
                     if(typeof data == "object"){
                         data.id = id;
                     }else data = {id:id};
                     var listView = $("<ul/>",data);
 
                     listView.listview({
-                        defaults: true
+                        defaults: true,
+                        theme:theme?theme:"a"
                     });
 
                     listView.manager = CreateList(id, listView);
