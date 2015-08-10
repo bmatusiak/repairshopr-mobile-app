@@ -102,7 +102,7 @@ define(function() {
       addTicket.manager.emit("addItem", commentBodyContainer);
 
       addTicket.manager.emit("addItem", "Create Ticket", function() {
-        if (!confirm("Create Ticket?")) return alert("no");
+        if (!confirm("Create Ticket?")) return ;
         var subject = ticketTitleInput.val();
         var problem_type = ticketType.find(":selected").text();
         var comment_body = commentBodyInput.val();
