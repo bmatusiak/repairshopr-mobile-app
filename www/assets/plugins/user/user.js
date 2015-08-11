@@ -15,8 +15,7 @@ define(["events"], function(events) {
         //var domain = settings.addSetting("domain","Domain");
         var api_key = settings.addSetting("api_key","API_KEY");
         var username = settings.addSetting("username","UserName");
-
-        var userProfile = {};
+        var user_data = settings.addSetting("user_data","user_data");
 
         function getApiKey(username, password, callback) {
             //done use api plugin becuase it doest have have a user_token yet!
@@ -24,7 +23,7 @@ define(["events"], function(events) {
                 email: username,
                 password: password
             }).done(function(data) {
-                userProfile = data;
+                user_data(data);
                 callback(null, data.user_token);
             }).fail(function(er) {
                 callback(true);
@@ -33,7 +32,7 @@ define(["events"], function(events) {
 
         var plugin = {
             user:{get:function(){
-                return userProfile;
+                return user_data();
             }},
             login: {
                 show:function (){
