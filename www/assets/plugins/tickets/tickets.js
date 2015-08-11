@@ -150,7 +150,7 @@ define(function() {
             if(!reloadTicket) return parseTicket();
             else {
 
-                ticketsList.manager.parent().emit("loading");
+                //ticketsList.manager.parent().emit("loading");
                 var customer = ticket.customer;
                 api.get("/tickets", {
                     number: ticket.number
@@ -163,7 +163,7 @@ define(function() {
                 }, function(er) {
                    parseTicket();
                 } ,function() {
-                    ticketsList.manager.parent().emit("doneLoading");
+                    //ticketsList.manager.parent().emit("doneLoading");
                 });
             }
 
@@ -218,7 +218,7 @@ define(function() {
         }
 
         function ticketsList_OnTouch(ticket) {
-            ticketsList.manager.parent().emit("loading");
+            //ticketsList.manager.parent().emit("loading");
             //var item = ticketsList.itemData[ticketNumber];
 
             loadCustomer(ticket,function() {
@@ -229,7 +229,7 @@ define(function() {
                     ticketLayout.manager.show(ticket);
                     alert("failed to get customer data");
                 },function() {
-                    ticketsList.manager.parent().emit("doneLoading");
+                    //ticketsList.manager.parent().emit("doneLoading");
                 });
         }
 
@@ -329,11 +329,11 @@ define(function() {
         ticketsList.manager.on("show", function(keepData,customer_id,hideSearch) {
             //if(!keepData){
                 ticketsList.manager.emit("clear");
-                ticketsList.manager.parent().emit("loading");
+                //ticketsList.manager.parent().emit("loading");
 
                 getTicketsList(customer_id,function(data){
 
-                    ticketsList.manager.parent().emit("doneLoading");
+                    //ticketsList.manager.parent().emit("doneLoading");
 
                     ticketsList.manager.emit("update", data.tickets, hideSearch);
 

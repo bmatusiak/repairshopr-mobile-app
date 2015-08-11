@@ -83,11 +83,11 @@ define(function() {
 
     paymentsList.manager.on("show", function(keepData) {
       paymentsList.manager.emit("clear");
-      paymentsList.manager.parent().emit("loading");
+      //paymentsList.manager.parent().emit("loading");
 
       api.get("/payments", {}, function(data) {
 
-        paymentsList.manager.parent().emit("doneLoading");
+        //paymentsList.manager.parent().emit("doneLoading");
 
         paymentsList.manager.emit("update", data.payments);
 

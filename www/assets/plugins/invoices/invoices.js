@@ -81,7 +81,7 @@ define(function() {
     }
 
     function invoicesList_OnTouch(invoice) {
-      invoicesList.manager.parent().emit("loading");
+      //invoicesList.manager.parent().emit("loading");
       //var item = ticketsList.itemData[ticketNumber];
 
       loadCustomer(invoice, function() {
@@ -92,7 +92,7 @@ define(function() {
         invoicesView.manager.show(invoice);
         alert("failed to get customer data");
       }, function() {
-        invoicesView.manager.parent().emit("doneLoading");
+        //invoicesView.manager.parent().emit("doneLoading");
       });
     }
 
@@ -110,13 +110,13 @@ define(function() {
 
     invoicesList.manager.on("show", function(keepData) {
       invoicesList.manager.emit("clear");
-      invoicesList.manager.parent().emit("loading");
+      //invoicesList.manager.parent().emit("loading");
 
       api.get("/invoices", {}, function(data) {
 
         invoicesList.manager.parent().emit("doneLoading");
 
-        invoicesList.manager.emit("update", data.invoices);
+        //invoicesList.manager.emit("update", data.invoices);
 
       });
     });

@@ -77,7 +77,7 @@ define(function() {
     }
 
     function appointmentsList_OnTouch(appointment) {
-      appointmentsList.manager.parent().emit("loading");
+      //appointmentsList.manager.parent().emit("loading");
       //var item = ticketsList.itemData[ticketNumber];
 
       loadCustomer(appointment, function() {
@@ -88,7 +88,7 @@ define(function() {
         appointmentsView.manager.show(appointment);
         alert("failed to get customer data");
       }, function() {
-        appointmentsView.manager.parent().emit("doneLoading");
+        //appointmentsView.manager.parent().emit("doneLoading");
       });
     }
 
@@ -106,11 +106,11 @@ define(function() {
 
     appointmentsList.manager.on("show", function(keepData) {
       appointmentsList.manager.emit("clear");
-      appointmentsList.manager.parent().emit("loading");
+      //appointmentsList.manager.parent().emit("loading");
 
       api.get("/appointments", {}, function(data) {
 
-        appointmentsList.manager.parent().emit("doneLoading");
+        //appointmentsList.manager.parent().emit("doneLoading");
 
         appointmentsList.manager.emit("update", data.appointments);
 

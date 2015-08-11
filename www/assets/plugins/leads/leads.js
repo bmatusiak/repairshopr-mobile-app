@@ -99,11 +99,11 @@ define(function() {
 
     leadsList.manager.on("show", function(keepData) {
       leadsList.manager.emit("clear");
-      leadsList.manager.parent().emit("loading");
+      //leadsList.manager.parent().emit("loading");
 
       api.get("/leads", {}, function(data) {
 
-        leadsList.manager.parent().emit("doneLoading");
+        //leadsList.manager.parent().emit("doneLoading");
 
         leadsList.manager.emit("update", data.leads);
 
