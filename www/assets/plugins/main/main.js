@@ -1,10 +1,10 @@
 /* globals app */
-$(function(){
-    $.mobile.loading( "show");
+$(function() {
+    // $.mobile.loading( "show");
 });
 define(function() {
 
-    appPlugin.consumes = ["factory","login","logout","mainLayout","tickets"];
+    appPlugin.consumes = ["factory", "login", "logout", "mainLayout", "tickets"];
     appPlugin.provides = ["main"];
     return appPlugin;
 
@@ -12,49 +12,58 @@ define(function() {
 
         var mainPage = imports.mainLayout.mainPage;
 
-        mainPage.manager.on("loading",function(){
-            $.mobile.loading( "show");
+        mainPage.manager.on("loading", function() {
+            $.mobile.loading("show");
         });
-        mainPage.manager.on("doneLoading",function(){
-            $.mobile.loading( "hide");
+        mainPage.manager.on("doneLoading", function() {
+            $.mobile.loading("hide");
         });
-        mainPage.manager.emit("doneLoading");
+        //mainPage.manager.emit("doneLoading");
 
 
         var ticketsList = imports.tickets.ticketsListLayout;
         ticketsList.manager.parent(mainPage.manager);
 
         window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
-                var popup = $( "<div/>" );
-                popup.popup();
-                popup.html("<h1>Error occured</h1><hr/><div> " + errorMsg + "<br>" + "["+lineNumber+"]"+url+"</div>");
-                popup.popup("open");
-                return false;
-            };
+            var popup = $("<div/>");
+            popup.popup();
+            popup.html("<h1>Error occured</h1><hr/><div> " + errorMsg + "<br>" + "[" + lineNumber + "]" + url + "</div>");
+            popup.popup("open");
+            return false;
+        };
+
+        document.body.addEventListener('contextmenu', function(ev) {
+            ev.preventDefault();
+            console.log(ev.toElement);
+            return false;
+        });
 
         var phonegap = !(window.global);
-        if(phonegap){
-            try{
+        if (phonegap) {
+            try {
                 //This is for droidscript
                 var s = document.createElement("script");
                 s.type = "text/javascript";
                 s.src = "cordova.js";
                 $('head').append(s);
-                document.addEventListener("backbutton", function(){
-                    mainPage.manager.emit("back",function(isEnd){
-                        if(isEnd) navigator.app.exitApp();
+                document.addEventListener("backbutton", function() {
+                    mainPage.manager.emit("back", function(isEnd) {
+                        if (isEnd) navigator.app.exitApp();
                     });
                 }, false);
-            }catch(e){
+            }
+            catch (e) {
 
             }
         }
 
-        register(null,{main:{
-            start:function(){
-                imports.login.start();
+        register(null, {
+            main: {
+                start: function() {
+                    imports.login.start();
+                }
             }
-        }});
+        });
     }
 
 });

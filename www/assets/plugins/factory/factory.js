@@ -109,10 +109,16 @@ define(["events"], function(events) {
                   e.preventDefault();
                 });
                 var searchDiv = $("<div/>");
-                searchDiv.addClass("ui-input-search ui-shadow-inset ui-input-has-clear ui-body-a ui-corner-all");
-                var searchInput = $("<input/>");
+                //searchDiv.addClass("ui-input-search ui-shadow-inset ui-input-has-clear ui-body-a ui-corner-all");
+                var searchInput = $("<input/>",{type:"search"});
                 searchForm.append(searchDiv);
                 searchDiv.append(searchInput);
+
+                searchInput.textinput({
+                    //clearBtn: true,
+                    //clearBtnText: ""
+                });
+
 
                 var renderedLI;
                 listEvents.emit("addItem", searchForm, false, true, true,function(LI){
@@ -136,6 +142,8 @@ define(["events"], function(events) {
                 };
 
                 searchInput.on("keyup", doUpdate);
+                searchDiv.contents().find(".ui-input-clear").click(doUpdate);
+
                 return {
                     hide:function(){
                         if(renderedLI) renderedLI.hide();
