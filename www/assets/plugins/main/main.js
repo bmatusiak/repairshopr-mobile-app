@@ -34,16 +34,6 @@ define(function() {
 
         var phonegap = !(window.global);
         if(phonegap){
-            setTimeout(function(){
-                if(cordova && cordova.plugins && cordova.plugins.notification)
-                    cordova.plugins.notification.local.schedule({
-                        id: 10,
-                        title: "Meeting in 15 minutes!",
-                        text: "Jour fixe Produktionsbesprechung",
-                        at: "tomorrow_at_8_45_am",
-                        data: { meetingId:"#123FG8" }
-                    });
-            },10000)
             try{
                 //This is for droidscript
                 var s = document.createElement("script");
