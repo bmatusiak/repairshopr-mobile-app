@@ -67,9 +67,6 @@ define(function () {
         };
 
 
-        //add location id to settings panel
-        pluginEvents.addSetting("location","Location ID",true);
-
         //add settings item to main layout
         imports.mainLayout.startPanel.manager.emit("addItem","Settings",function() {
             settingsList.manager.emit("setup");
