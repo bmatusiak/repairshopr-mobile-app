@@ -53,9 +53,10 @@ define(function() {
       ticketTitleContainer.append(ticketTitle);
 
       var ticketTitleInput = $("<input/>");
-      ticketTitleInput.textinput();
       ticketTitleInput.css("width", "100%");
       ticketTitleContainer.append(ticketTitleInput);
+
+      ticketTitleInput.textinput();
 
       addTicket.manager.emit("addItem", ticketTitleContainer);
 
