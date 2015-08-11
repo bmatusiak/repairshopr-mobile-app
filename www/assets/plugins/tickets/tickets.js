@@ -189,7 +189,9 @@ define(function() {
                 for (var i in ticket.comments) {
                     ticketLayout.manager.emit("addItem", ticket.comments[i].tech + " - [<b>" + ticket.comments[i].subject + "</b>] - " + formatDate(ticket.created_at) + "<br/>" + ticket.comments[i].body.replace(/(?:\r\n|\r|\n)/g, '<br />'));
                     //ticketLayout.manager.emit("addItem",ticket.comments[i].body);
-                    ticketLayout.manager.emit("addItem", "<hr/>");
+                    //ticketLayout.manager.emit("addItem", "<hr/>");
+                    ticketLayout.manager.emit("addDivider");
+
 
                 }
                 ticketLayout.manager.emit("setup");

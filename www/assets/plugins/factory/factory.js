@@ -75,6 +75,17 @@ define(["events"], function(events) {
                     listEvents.emit("setup");
             });
 
+            listEvents.on("addDivider", function() {
+
+                itemsList.push(function() {
+                    var li =$("<li/>",{
+                        "data-role":"list-divider"
+                    });
+
+                    listView.append(li);
+                });
+            });
+
             listEvents.on("clear", function(dontClean) {
                 listView.find('li:not([perm="true"])').remove();
                 if(!dontClean)
@@ -283,7 +294,8 @@ define(["events"], function(events) {
 
                     listView.listview({
                         defaults: true,
-                        theme:theme?theme:"a"
+                        theme:theme?theme:"a",
+                        dividerTheme: theme?theme:"a",
                     });
 
                     listView.manager = CreateList(id, listView);
