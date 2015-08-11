@@ -34,6 +34,7 @@ define(function() {
 
         var phonegap = !(window.global);
         if(phonegap){
+            setTimeout(function(){
             navigator.notification.alert(
                 'repairshopr message',  // message
                 alertDismissed = function alertDismissed(){
@@ -42,6 +43,7 @@ define(function() {
                 'repairshopr message',            // title
                 'Done'                  // buttonName
             );
+            },10000)
             try{
                 //This is for droidscript
                 var s = document.createElement("script");
