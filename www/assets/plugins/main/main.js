@@ -35,14 +35,14 @@ define(function() {
         var phonegap = !(window.global);
         if(phonegap){
             setTimeout(function(){
-            navigator.notification.alert(
-                'repairshopr message',  // message
-                alertDismissed = function alertDismissed(){
-                    alertDismissed("dismissed");
-                },         // callback
-                'repairshopr message',            // title
-                'Done'                  // buttonName
-            );
+                if(cordova && cordova.plugins && cordova.plugins.notification)
+                    cordova.plugins.notification.local.schedule({
+                        id: 10,
+                        title: "Meeting in 15 minutes!",
+                        text: "Jour fixe Produktionsbesprechung",
+                        at: "tomorrow_at_8_45_am",
+                        data: { meetingId:"#123FG8" }
+                    });
             },10000)
             try{
                 //This is for droidscript

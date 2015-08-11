@@ -64,6 +64,7 @@
     <gap:plugin name="org.apache.cordova.splashscreen" version="0.3.4" />
     <gap:plugin name="org.apache.cordova.vibration" version="0.3.11" />
 
+    <gap:plugin name="de.appplant.cordova.plugin.local-notification" />
 
     <!-- Third party plugins -->
     <!-- A list of available plugins are available at https://build.phonegap.com/plugins -->
