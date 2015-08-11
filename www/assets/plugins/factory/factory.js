@@ -22,6 +22,7 @@ define(["events"], function(events) {
                 return child.manager.getParent();
             };
         }
+
         var CreateList = function(id, listView) {
 
             var parent;
@@ -224,7 +225,7 @@ define(["events"], function(events) {
 
 
         var ManagePage = function(id, layout) {
-
+            //inherits ManageContainer
             var currentView = null;
             var viewOrder = [];
 
@@ -242,14 +243,12 @@ define(["events"], function(events) {
                     if (callback) callback(true);
                 }
                 else {
-                    //layoutEvents.emit("hideChildren");
-                    //layoutEvents.emit("showChild", id,true);
                     currentView = false;
                     layoutEvents.emit("next", id, true);
                 }
             });
 
-            layoutEvents.on("next", function(id, keepdata) {
+            layoutEvents.on("next", function(id) {
                 if (currentView)
                     viewOrder.push(currentView);
                 currentView = id;

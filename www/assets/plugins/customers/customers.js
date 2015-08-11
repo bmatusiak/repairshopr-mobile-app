@@ -27,12 +27,90 @@ define(function() {
     var addEditCustomer = factory.createList("addEditCustomer");
 
     addEditCustomer.manager.on("update", function(customer) {
+      var isNew = false;
+      if (!customer) isNew = true;
+
+      function createEditItem(name, data) {
+        var container = $("<div/>");
+
+        var title = $("<b/>");
+        title.text(name + ":");
+        container.append(title);
+
+        var input = $("<input/>");
+        input.css("width", "100%");
+        container.append(input);
+
+        if (data)
+          input.val(data);
+
+        input.textinput();
+
+        addEditCustomer.manager.emit("addItem", container);
+        return input;
+      }
       addEditCustomer.manager.emit("clear");
+
+      var customerFirstNameInput = createEditItem("Customer First Name", customer ? customer.firstname : "");
+      var customerLastNameInput = createEditItem("Customer Last Name", customer ? customer.lastname : "");
+      var customerPhoneInput = createEditItem("Phone", customer ? customer.phone : "");
+      var customerEmailInput = createEditItem("Email", customer ? customer.email : "");
+
+      addEditCustomer.manager.emit("addDivider");
+      //mobile, business_name, address, address_2, city, state, zip
+
+      var customerMobileInput = createEditItem("Mobile", customer ? customer.mobile : "");
+      var customerBusinessInput = createEditItem("business_name", customer ? customer.business_name : "");
+      var customerAddressInput = createEditItem("address", customer ? customer.address : "");
+      var customerAddress2Input = createEditItem("address_2", customer ? customer.address_2 : "");
+      var customerCityInput = createEditItem("city", customer ? customer.city : "");
+      var customerStateInput = createEditItem("state", customer ? customer.state : "");
+      var customerZipInput = createEditItem("zip", customer ? customer.zip : "");
+
+      addEditCustomer.manager.emit("addItem", "Save", function() {
+        if (!confirm("Are you sure?")) return;
+
+        var requiredFulfilled = true
+        var savedCustomer = {
+          //firstname, lastname, phone, email, mobile, business_name, address, address_2, city, state, zip
+        };
+
+        function checkInput(input, pointer,required) {
+          if(input.val() !== "")
+            savedCustomer[pointer] = input.val();
+
+          if(required && savedCustomer[pointer] == "") requiredFulfilled = false;
+        }
+
+        checkInput(customerFirstNameInput,"firstname",true);
+        checkInput(customerLastNameInput,"lastname",true);
+        checkInput(customerPhoneInput,"phone",true);
+        checkInput(customerEmailInput,"email",true);
+        checkInput(customerMobileInput,"mobile");
+        checkInput(customerBusinessInput,"business_name");
+        checkInput(customerAddressInput,"address");
+        checkInput(customerAddress2Input,"address_2");
+        checkInput(customerCityInput,"city");
+        checkInput(customerStateInput,"state");
+        checkInput(customerZipInput,"zip");
+
+        if(!requiredFulfilled)
+          return alert("Firstname, Lastname, Phone, Email: Are required Fileds!");
+
+        if (isNew)
+          api.post("/customers", savedCustomer,false,false,function(){
+
+          });
+        else api.put("/customers/" + customer.id, savedCustomer,false,false,function(){
+            imports.mainLayout.mainPage.manager.emit("back");
+          });
+      });
 
       addEditCustomer.manager.emit("setup");
 
     });
     addEditCustomer.manager.parent(imports.mainLayout.mainPage.manager);
+
 
     /****       ****/
     var addTicket = factory.createList("addTicket");
@@ -103,7 +181,7 @@ define(function() {
       addTicket.manager.emit("addItem", commentBodyContainer);
 
       addTicket.manager.emit("addItem", "Create Ticket", function() {
-        if (!confirm("Create Ticket?")) return ;
+        if (!confirm("Create Ticket?")) return;
         var subject = ticketTitleInput.val();
         var problem_type = ticketType.find(":selected").text();
         var comment_body = commentBodyInput.val();
@@ -177,6 +255,12 @@ define(function() {
         tickets.ticketsListLayout.manager.show(false, customer.id, true)
       });
 
+
+      customerView.manager.emit("addItem", "Edit Customer", function() {
+        addEditCustomer.manager.emit("update", customer);
+        addEditCustomer.manager.show();
+      });
+
       customerView.manager.emit("setup");
     });
 
@@ -243,6 +327,7 @@ define(function() {
       customersList.manager.show();
     }, true);
 
+
     var addCustomerBtn = $("<span/>", {
       class: "ui-btn-right",
       style: "padding: 16px 30px 0px 0px;"
@@ -260,6 +345,12 @@ define(function() {
     customersList.manager.on("show", function() {
       addCustomerBtn.show();
     });
+
+    addCustomerBtn.click(function() {
+      addEditCustomer.manager.emit("update");
+      addEditCustomer.manager.show();
+    });
+
 
     customersList.manager.parent(imports.mainLayout.mainPage.manager);
     customerView.manager.parent(imports.mainLayout.mainPage.manager);
