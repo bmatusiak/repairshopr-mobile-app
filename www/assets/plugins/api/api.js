@@ -29,6 +29,22 @@ define(function() {
             });
         }
 
+        $.delete = function(url, data, callback, type) {
+            if ($.isFunction(data)) {
+                type = type || callback,
+                    callback = data,
+                    data = {}
+            }
+
+            return $.ajax({
+                url: url,
+                type: 'DELETE',
+                success: callback,
+                data: data,
+                contentType: type
+            });
+        }
+
         var api = {
             get:function(location,data,done,fail,always){
                 data.api_key = user().user_token;
@@ -37,6 +53,10 @@ define(function() {
             put:function(location,data,done,fail,always){
                 data.api_key = user().user_token;
                 $.put("https://"+ user().subdomain+".repairshopr.com/api/v1"+location, data).done(done).fail(fail).always(always);
+            },
+            delete:function(location,data,done,fail,always){
+                data.api_key = user().user_token;
+                $.delete("https://"+ user().subdomain+".repairshopr.com/api/v1"+location, data).done(done).fail(fail).always(always);
             },
             post:function(location,data,done,fail,always){
                 data.api_key = user().user_token;

@@ -162,6 +162,9 @@ define(["events"], function(events) {
                     },
                     show:function(){
                         if(renderedLI) renderedLI.show();
+                    },
+                    call:function(){
+                        doUpdate();
                     }
                 };
             };

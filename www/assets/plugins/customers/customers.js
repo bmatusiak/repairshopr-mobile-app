@@ -70,14 +70,15 @@ define(function() {
       addEditCustomer.manager.emit("addItem", "Save", function() {
         if (!confirm("Are you sure?")) return;
 
-        var requiredFulfilled = true
+        var requiredFulfilled = true;
         var savedCustomer = {
           //firstname, lastname, phone, email, mobile, business_name, address, address_2, city, state, zip
         };
 
         function checkInput(input, pointer,required) {
           if(input.val() !== "")
-            savedCustomer[pointer] = input.val();
+            if(customer[pointer] !== input.val())
+              savedCustomer[pointer] = input.val();
 
           if(required && savedCustomer[pointer] == "") requiredFulfilled = false;
         }
@@ -98,10 +99,15 @@ define(function() {
           return alert("Firstname, Lastname, Phone, Email: Are required Fileds!");
 
         if (isNew)
-          api.post("/customers", savedCustomer,false,false,function(){
-
+          api.post("/customers", savedCustomer,function(data){
+          customerView.manager.emit("update",data.customer);
+          customerView.manager.show();
+        },false,function(){
+            imports.mainLayout.mainPage.manager.emit("back");
           });
-        else api.put("/customers/" + customer.id, savedCustomer,false,false,function(){
+        else api.put("/customers/" + customer.id, savedCustomer,function(data){
+          customerView.manager.emit("update",data.customer);
+        },false,function(){
             imports.mainLayout.mainPage.manager.emit("back");
           });
       });
@@ -240,7 +246,6 @@ define(function() {
       if (customer.location_name)
         customerView.manager.emit("addItem", "Location Name: <b>" + customer.location_name + "</b>");
       customerView.manager.emit("addItem", "Assets", function() {
-
         customer_assets.customer_assetsList.manager.emit("update", customer);
         customer_assets.customer_assetsList.manager.show();
       });
@@ -250,23 +255,29 @@ define(function() {
         addTicket.manager.show();
       });
 
-
       customerView.manager.emit("addItem", "Tickets", function() {
-        tickets.ticketsListLayout.manager.show(false, customer.id, true)
+        tickets.ticketsListLayout.manager.show(false, customer.id, true);
       });
-
 
       customerView.manager.emit("addItem", "Edit Customer", function() {
         addEditCustomer.manager.emit("update", customer);
         addEditCustomer.manager.show();
       });
 
+      /*customerView.manager.emit("addItem", "Delete Customer", function() {
+        if(!confirm("Are you sure you want to delete customer '"+customer.fullname+"'?")) return;
+        if(!confirm("Again! Are you sure you want to delete customer '"+customer.fullname+"'?")) return;
+        api.delete("/customer/"+customer.id,{},false,false,function(){
+          imports.mainLayout.mainPage.manager.emit("back");
+        });
+      });*/
+
       customerView.manager.emit("setup");
     });
 
     customerView.manager.on("show", function(keepData) {
       if (!keepData) {
-
+        //alert("load customerView dont keep data")
       }
     });
 
@@ -274,7 +285,22 @@ define(function() {
 
     var customersList = factory.createList("customersList");
 
-    customersList.manager.searchable(function(val, done) {
+
+    function updateBasicList() {
+      api.get("/customers", {}, function(data) {
+        customersList.manager.emit("clear");
+        for (var i in data.customers) {
+          (function(customer) {
+            customersList.manager.emit("addItem", "<b>" + data.customers[i].fullname + "</b>", function() {
+              customerView.manager.emit("update", customer);
+              customerView.manager.show();
+            });
+          })(data.customers[i]);
+        }
+        customersList.manager.emit("setup");
+      });
+    }
+    var customersListUpdate = function(val, done) {
       if (val == "") {
         updateBasicList();
         done();
@@ -297,29 +323,16 @@ define(function() {
       }, function() {
         //api errors,,  youknow somthing thats not statusCode 200
       }, done);
-    });
-
-
-
-    function updateBasicList() {
-      api.get("/customers", {}, function(data) {
-        customersList.manager.emit("clear");
-        for (var i in data.customers) {
-          (function(customer) {
-            customersList.manager.emit("addItem", "<b>" + data.customers[i].fullname + "</b>", function() {
-              customerView.manager.emit("update", customer);
-              customerView.manager.show();
-            });
-          })(data.customers[i]);
-        }
-        customersList.manager.emit("setup");
-      });
     }
+
+    var customerSearchable = customersList.manager.searchable(customersListUpdate);
+
     customersList.manager.on("show", function(keepData) {
-      if (!keepData) {
-        updateBasicList();
-      }
+      customerSearchable.call();
     });
+
+
+
 
     imports.mainLayout.startList.manager.emit("addItem", function() {
       return "Customers";
