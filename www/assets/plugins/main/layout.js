@@ -15,37 +15,42 @@ define(function(events) {
         var mainContent = plugin.mainPage = factory.managePage("#mainContent");
 
         $("#back").click(function(e) {
-            mainContent.manager.emit("back");
+            mainContent.back();
         });
 
 
-         var startList = plugin.startList = factory.createList("startList");
-        startList.manager.parent(mainContent.manager);
+        var startList = plugin.startList = factory.createList({id:"startList"},mainContent);
 
-        var startListBtn  = plugin.startListBtn = $("<a/>",{class:"ui-btn-right",style:"padding: 16px 30px 0px 0px;"});
+        var startListBtn  = plugin.startListBtn = $("<a/>",{"class":"ui-btn-right",style:"padding: 16px 30px 0px 0px;"});
         startListBtn.html("&nbsp;");
         startListBtn.button();
         startListBtn.buttonMarkup({ icon: "gear" });
         $("#header").append(startListBtn);
 
-        startList.manager.on("hide",function(){
+        startList.on("hide",function(){
             startListBtn.hide();
         });
-        startList.manager.on("show",function(){
+        startList.on("show",function(){
             startListBtn.show();
         });
 
         var mainPanel = plugin.mainPanel =factory.managePage("#mainPanel");
-        var startPanel = plugin.startPanel = factory.createList("startPanel",false,"b");
-        startPanel.manager.parent(mainPanel.manager);
-        startPanel.manager.on("itemClick",function(){
-            mainPanel.panel("close");
-        })
+        var startPanel = plugin.startPanel = factory.createList({id:"startPanel"},mainPanel);
+        startPanel.effect = false;
+        //startPanel.parent(mainPanel.manager);
+        startPanel.on("itemClick",function(){
+            mainPanel.element.panel("close");
+        });
+
         startListBtn.click(function(){
-            startPanel.manager.start();
-            mainPanel.trigger( "updatelayout" );
-            mainPanel.panel("open");
-        })
+            startPanel.start();
+            mainPanel.element.trigger( "updatelayout" );
+            mainPanel.element.panel("open");
+        });
+
+        plugin.init = function(){
+
+        };
 
         register(null, {
             mainLayout: plugin

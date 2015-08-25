@@ -76,31 +76,35 @@ define(["events"], function(events) {
         });
 
 
-        imports.mainLayout.startPanel.manager.emit("addItem",function(){
+        imports.mainLayout.startPanel.addItem(function(){
             return "Logout";
         },function(){
             plugin.logout.start();
         },true);
 
-        var loginList = imports.factory.createList("loginList");
-        loginList.manager.parent(imports.mainLayout.mainPage.manager);
+        var loginList = imports.factory.createList({id:"loginList"},imports.mainLayout.mainPage);
 
-        loginList.manager.emit("addItem",function(){
+        loginList.addItem(function(){
             return "Login";
         },function(){
             plugin.login.show();
         },true);
 
         plugin.login.onLogin(function () {
-            imports.mainLayout.startList.manager.start();
+            imports.mainLayout.startList.start();
         });
 
         plugin.logout.onLogout(function(){
             user_data({});
-            loginList.manager.start();
+            loginList.start();
             plugin.login.show();
         });
 
+        plugin.login.init = function(){
+            console.log("login init")
+              plugin.login.start();
+
+        };
 
 
 

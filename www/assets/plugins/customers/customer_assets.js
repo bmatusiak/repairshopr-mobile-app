@@ -17,19 +17,19 @@ define(function() {
       return date.toDateString() + ", " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
     }
 
-    var customer_assetView = factory.createList("customer_assetView");
+    var customer_assetView = factory.createList({id:"customer_assetView"},imports.mainLayout.mainPage);
 
 
-    customer_assetView.manager.on("update", function(customer_asset) {
-      customer_assetView.manager.emit("clear");
+    customer_assetView.on("update", function(customer_asset) {
+      customer_assetView.clear();
 
-      customer_assetView.manager.emit("addItem", "id: <b>" + customer_asset.id + "</b>");
-      customer_assetView.manager.emit("addItem", "name: <b>" + customer_asset.name + "</b>");
-      customer_assetView.manager.emit("addItem", "customer_id: <b>" + customer_asset.customer_id + "</b>");
-      customer_assetView.manager.emit("addItem", "created_at: <b>" + customer_asset.created_at + "</b>");
-      customer_assetView.manager.emit("addItem", "updated_at: <b>" + customer_asset.updated_at + "</b>");
-      customer_assetView.manager.emit("addItem", "asset_type: <b>" + customer_asset.asset_type + "</b>");
-      customer_assetView.manager.emit("addItem", "asset_serial: <b>" + customer_asset.asset_serial + "</b>");
+      customer_assetView.addItem( "id: <b>" + customer_asset.id + "</b>");
+      customer_assetView.addItem( "name: <b>" + customer_asset.name + "</b>");
+      customer_assetView.addItem( "customer_id: <b>" + customer_asset.customer_id + "</b>");
+      customer_assetView.addItem( "created_at: <b>" + customer_asset.created_at + "</b>");
+      customer_assetView.addItem( "updated_at: <b>" + customer_asset.updated_at + "</b>");
+      customer_assetView.addItem( "asset_type: <b>" + customer_asset.asset_type + "</b>");
+      customer_assetView.addItem( "asset_serial: <b>" + customer_asset.asset_serial + "</b>");
 
       /*
         id:
@@ -45,37 +45,37 @@ define(function() {
         asset_type:
         asset_serial:
       */
-      customer_assetView.manager.emit("setup");
+      customer_assetView.setup();
     });
 
-    customer_assetView.manager.on("show", function(keepData) {
+    customer_assetView.on("show", function(keepData) {
       if (!keepData) {
 
       }
     });
 
-    var customer_assetsList = factory.createList("customer_assetsList");
+    var customer_assetsList = factory.createList({id:"customer_assetsList"},imports.mainLayout.mainPage);
 
-    customer_assetsList.manager.on("update", function(customer) {
-      customer_assetsList.manager.emit("clear");
-      customer_assetsList.manager.emit("addItem", "<b>Loading...</b>");
-      customer_assetsList.manager.emit("setup");
+    customer_assetsList.on("update", function(customer) {
+      customer_assetsList.clear();
+      customer_assetsList.addItem( "<b>Loading...</b>");
+      customer_assetsList.setup();
       api.get("/customer_assets", {
         customer_id: customer.id
       }, function(data) {
-        customer_assetsList.manager.emit("clear");
+        customer_assetsList.clear();
         if(data.assets.length)
           for (var i in data.assets) {
             (function(asset) {
-              customer_assetsList.manager.emit("addItem", "["+asset.asset_type+"] - <b>" + asset.name + "</b>", function() {
-                customer_assetView.manager.emit("update", asset);
-                customer_assetView.manager.show();
+              customer_assetsList.addItem( "["+asset.asset_type+"] - <b>" + asset.name + "</b>", function() {
+                customer_assetView.emit("update", asset);
+                customer_assetView.show();
               });
             })(data.assets[i]);
           }
-        else customer_assetsList.manager.emit("addItem", "<b>No Assets</b>");
+        else customer_assetsList.addItem( "<b>No Assets</b>");
 
-        customer_assetsList.manager.emit("setup");
+        customer_assetsList.setup();
       }, function() {
 
       }, function() {
@@ -83,15 +83,15 @@ define(function() {
       });
     });
 
-    customer_assetsList.manager.on("show", function(keepData) {
+    customer_assetsList.on("show", function(keepData) {
       if (!keepData) {
 
       }
     });
 
 
-    customer_assetsList.manager.parent(imports.mainLayout.mainPage.manager);
-    customer_assetView.manager.parent(imports.mainLayout.mainPage.manager);
+    //customer_assetsList.manager.parent(imports.mainLayout.mainPage.manager);
+    //customer_assetView.manager.parent(imports.mainLayout.mainPage.manager);
 
     register(null, {
       customer_assets: {

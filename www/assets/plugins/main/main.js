@@ -4,66 +4,65 @@ $(function() {
 });
 define(function() {
 
-    appPlugin.consumes = ["factory", "login", "logout", "mainLayout", "tickets"];
-    appPlugin.provides = ["main"];
+    //appPlugin.consumes = ["factory", "login", "logout", "mainLayout", "tickets"];
+    appPlugin.consumes = ["hub"];
+    appPlugin.provides = ["main", "plugin"];
     return appPlugin;
 
     function appPlugin(options, imports, register) {
+        var hub = imports.hub;
 
-        var mainPage = imports.mainLayout.mainPage;
-
-        mainPage.manager.on("loading", function() {
-            $.mobile.loading("show");
-        });
-        mainPage.manager.on("doneLoading", function() {
-            $.mobile.loading("hide");
-        });
-        //mainPage.manager.emit("doneLoading");
-
-
-        var ticketsList = imports.tickets.ticketsListLayout;
-        ticketsList.manager.parent(mainPage.manager);
-
-        window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
-            var popup = $("<div/>");
-            popup.popup();
-            popup.html("<h1>Error occured</h1><hr/><div> " + errorMsg + "<br>" + "[" + lineNumber + "]" + url + "</div>");
-            popup.popup("open");
-            return false;
-        };
-
-        document.body.addEventListener('contextmenu', function(ev) {
-            ev.preventDefault();
-            console.log(ev.toElement);
-            return false;
+        hub.on("service", function(name, service) {
+            console.log("Service loaded:",name);
+            plugins.push(service);
         });
 
-        var phonegap = !(window.global);
-        if (phonegap) {
-            try {
-                //This is for droidscript
-                var s = document.createElement("script");
-                s.type = "text/javascript";
-                s.src = "cordova.js";
-                $('head').append(s);
-                document.addEventListener("backbutton", function() {
-                    mainPage.manager.emit("back", function(isEnd) {
-                        if (isEnd) navigator.app.exitApp();
-                    });
-                }, false);
-            }
-            catch (e) {
-
-            }
-        }
+        var plugins = [];
 
         register(null, {
             main: {
                 start: function() {
-                    imports.login.start();
+                    plugins = plugins.slice(0);
+                    for (var i = 0, len = plugins.length; i < len; ++i) {
+                        if(plugins[i].init)
+                        plugins[i].init.apply(plugins[i]);
+                    }
                 }
+            },
+            plugin: function($plugin) {
+               plugins.push($plugin);
             }
         });
     }
 
 });
+
+
+
+// var mainPage = imports.mainLayout.mainPage;
+
+// mainPage.manager.on("loading", function() {
+//     $.mobile.loading("show");
+// });
+// mainPage.manager.on("doneLoading", function() {
+//     $.mobile.loading("hide");
+// });
+// //mainPage.manager.emit("doneLoading");
+
+
+// var ticketsList = imports.tickets.ticketsListLayout;
+// ticketsList.manager.parent(mainPage.manager);
+
+// window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
+//     var popup = $("<div/>");
+//     popup.popup();
+//     popup.html("<h1>Error occured</h1><hr/><div> " + errorMsg + "<br>" + "[" + lineNumber + "]" + url + "</div>");
+//     popup.popup("open");
+//     return false;
+// };
+
+// document.body.addEventListener('contextmenu', function(ev) {
+//     ev.preventDefault();
+//     console.log(ev.toElement);
+//     return false;
+// });

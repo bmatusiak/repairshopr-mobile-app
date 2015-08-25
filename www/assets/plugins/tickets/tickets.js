@@ -15,74 +15,68 @@ define(function() {
         var formatDate = imports.tools.format.date;
 
         /****       ****/
-        var changeTicketStatus = factory.createList("changeTicketStatus");
+        var changeTicketStatus = factory.createList("changeTicketStatus",imports.mainLayout.mainPage);
 
 
-        changeTicketStatus.manager.on("update", function(ticket) {
-            changeTicketStatus.manager.emit("clear");
+        changeTicketStatus.on("update", function(ticket) {
+            changeTicketStatus.clear();
             api.get("/tickets/settings",{},function(data){
                 //var statuss = ["New","Waiting for Parts","Waiting on Customer","In Progress","Waiting For Pickup","Resolved"];
                 var statuss = data.ticket_status_list;
-                changeTicketStatus.manager.emit("addItem", "<b>" + ticket.number + " - [" + ticket.status + "] " + ticket.customer_business_then_name + "</b> <span style='float: right;font-weight: bold;'>"+ ticket.subject+"</span><br>" + ticket.problem_type + " - " + formatDate(ticket.updated_at));
+                changeTicketStatus.addItem( "<b>" + ticket.number + " - [" + ticket.status + "] " + ticket.customer_business_then_name + "</b> <span style='float: right;font-weight: bold;'>"+ ticket.subject+"</span><br>" + ticket.problem_type + " - " + formatDate(ticket.updated_at));
                 for (var i = 0; i < statuss.length; i++) {
-                    changeTicketStatus.manager.emit("addItem", statuss[i],(function(status){
+                    changeTicketStatus.addItem( statuss[i],(function(status){
                         if(!window.confirm("Are your sure?")) return;
                         api.put("/tickets/"+ticket.id,{
                             status: status
                         },function(){
-                            addComment.manager.parent().emit("back");
-                            ticketLayout.manager.emit("update", ticket, true);
+                            addComment.back();
+                            ticketLayout.emit("update", ticket, true);
                         },function(){
                             console.log(arguments);
                         });
                     }).bind({},statuss[i]) );
                 }
 
-                changeTicketStatus.manager.emit("setup");
+                changeTicketStatus.setup();
 
             })
         });
 
-        changeTicketStatus.manager.on("show", function(keepData) {
-            if (!keepData) {
-
-            }
-        });
-
         /****       ****/
-        var addComment = factory.createList("addComment");
+        var addComment = factory.createList("addComment",imports.mainLayout.mainPage);
 
 
-        addComment.manager.on("update", function(ticket) {
-            addComment.manager.emit("clear");
-            addComment.manager.emit("addItem", "<b>" + ticket.number + " - [" + ticket.status + "] " + ticket.customer_business_then_name + "</b> <span style='float: right;font-weight: bold;'>"+ ticket.subject+"</span><br>" + ticket.problem_type + " - " + formatDate(ticket.updated_at));
+        addComment.on("update", function(ticket) {
+            addComment.clear();
+            addComment.addItem( "<b>" + ticket.number + " - [" + ticket.status + "] " + ticket.customer_business_then_name + "</b> <span style='float: right;font-weight: bold;'>"+ ticket.subject+"</span><br>" + ticket.problem_type + " - " + formatDate(ticket.updated_at));
 
             var item =  $("<textarea/>");
             item.css("width","100%");
             item.css("min-height","100px");
 
-            addComment.manager.emit("addItem",item);
+            addComment.addItem(item);
 
 
-            addComment.manager.emit("addItem", "Preview Comment", function() {
+            addComment.addItem( "Preview Comment", function() {
                 var commentText = item.val();
-                previewComment.manager.emit("update",ticket, commentText);
-                previewComment.manager.show(ticket,commentText);
+                previewComment.emit("update",ticket, commentText);
+                previewComment.next();
             });
-            addComment.manager.emit("setup");
+            addComment.setup();
         });
 
-        var previewComment = factory.createList("previewComment");
-        previewComment.manager.on("update", function(ticket, comment) {
-            previewComment.manager.emit("clear");
-            previewComment.manager.emit("addItem", "<b>" + ticket.number + " - [" + ticket.status + "] " + ticket.customer_business_then_name + "</b> <span style='float: right;font-weight: bold;'>"+ ticket.subject+"</span><br>" + ticket.problem_type + " - " + formatDate(ticket.updated_at));
+        var previewComment = factory.createList("previewComment",imports.mainLayout.mainPage);
+        previewComment.on("update", function(ticket, comment) {
+            previewComment.clear();
+            previewComment.addItem( "<b>" + ticket.number + " - [" + ticket.status + "] " + ticket.customer_business_then_name + "</b> <span style='float: right;font-weight: bold;'>"+ ticket.subject+"</span><br>" + ticket.problem_type + " - " + formatDate(ticket.updated_at));
 
             var text = $("<textarea/>",{disabled:"disabled"});
             text.css("width","100%");
             text.css("min-height","100px");
             text.text(comment);
-            previewComment.manager.emit("addItem", text);
-            previewComment.manager.emit("addItem", "Save Comment", function() {
+            previewComment.addItem( text);
+            previewComment.addItem( "Save Comment", function() {
                 if(!window.confirm("Are your sure?")) return;
                 api.post("/tickets/"+ticket.number+"/comment",{
                     subject:"Update",
@@ -91,14 +85,14 @@ define(function() {
                     sms_body:"",
                     do_not_email:"1"
                 },function(){
-                    addComment.manager.parent().emit("back");
-                    addComment.manager.parent().emit("back");
-                    ticketLayout.manager.emit("update", ticket, true);
+                    addComment.back();
+                    addComment.back();
+                    ticketLayout.emit("update", ticket, true);
                 },function(){
                     console.log(arguments)
                 });
             });
-            previewComment.manager.emit("addItem", "Save Comment & Email", function() {
+            previewComment.addItem( "Save Comment & Email", function() {
                 if(!window.confirm("Are your sure?")) return;
                 api.post("/tickets/"+ticket.number+"/comment",{
                     subject:"Update",
@@ -107,15 +101,15 @@ define(function() {
                     sms_body:"",
                     do_not_email:"0"
                 },function(){
-                    addComment.manager.parent().emit("back");
-                    addComment.manager.parent().emit("back");
-                    ticketLayout.manager.emit("update", ticket, true);
+                    addComment.back();
+                    addComment.back();
+                    ticketLayout.emit("update", ticket, true);
                 },function(){
                     console.log(arguments)
                 });
             });
 
-            previewComment.manager.emit("addItem", "Save Hidden Comment", function() {
+            previewComment.addItem( "Save Hidden Comment", function() {
                 if(!window.confirm("Are your sure?")) return;
                 api.post("/tickets/"+ticket.number+"/comment",{
                     subject:"Update",
@@ -124,33 +118,27 @@ define(function() {
                     sms_body:"",
                     do_not_email:"1"
                 },function(){
-                    addComment.manager.parent().emit("back");
-                    addComment.manager.parent().emit("back");
-                    ticketLayout.manager.emit("update", ticket, true);
+                    addComment.back();
+                    addComment.back();
+                    ticketLayout.emit("update", ticket, true);
                 },function(){
                     console.log(arguments)
                 });
             });
-            previewComment.manager.emit("setup");
+            previewComment.setup();
         });
 
         /****       ****/
-        var ticketLayout = factory.createList("ticketView");
+        var ticketLayout = factory.createList("ticketView",imports.mainLayout.mainPage);
 
-        ticketLayout.manager.on("addParent", function(Parent) {
-            changeTicketStatus.manager.parent(Parent);
-            addComment.manager.parent(Parent);
-            previewComment.manager.parent(Parent);
-        });
+        ticketLayout.on("update", function(ticket,reloadTicket) {
 
-        ticketLayout.manager.on("update", function(ticket,reloadTicket) {
-
-            ticketLayout.manager.emit("clear");
+            ticketLayout.clear();
 
             if(!reloadTicket) return parseTicket();
             else {
 
-                //ticketsList.manager.parent().emit("loading");
+                //ticketsList.parent().emit("loading");
                 var customer = ticket.customer;
                 api.get("/tickets", {
                     number: ticket.number
@@ -163,53 +151,49 @@ define(function() {
                 }, function(er) {
                    parseTicket();
                 } ,function() {
-                    //ticketsList.manager.parent().emit("doneLoading");
+                    //ticketsList.parent().emit("doneLoading");
                 });
             }
 
             function parseTicket(){
-                ticketLayout.manager.emit("addItem", ticket.number + " - " + ticket.customer.fullname + "",function(){
-                    customers.customerView.manager.emit("update", ticket.customer);
-                    customers.customerView.manager.show();
+                ticketLayout.addItem( ticket.number + " - " + ticket.customer.fullname + "",function(){
+                    customers.customerView.emit("update", ticket.customer);
+                    customers.customerView.next();
                 });
-                ticketLayout.manager.emit("addItem", "Status - " + ticket.status, function() {
+                ticketLayout.addItem( "Status - " + ticket.status, function() {
 
-                    changeTicketStatus.manager.emit("update", ticket);
-                    changeTicketStatus.manager.show(ticket);
+                    changeTicketStatus.emit("update", ticket);
+                    changeTicketStatus.next();
                 });
-                ticketLayout.manager.emit("addItem", "Created - " + formatDate(ticket.created_at));
-                ticketLayout.manager.emit("addItem", "Updated - " + formatDate(ticket.updated_at));
-                ticketLayout.manager.emit("addItem", "Location - " + ticket.location_id);
-                ticketLayout.manager.emit("addItem", ticket.problem_type + " - " + ticket.subject + "");
-                ticketLayout.manager.emit("addItem", "<b>Comments</b> <hr/>", function() {
-                    addComment.manager.emit("update", ticket);
-                    addComment.manager.show(ticket);
+                ticketLayout.addItem( "Created - " + formatDate(ticket.created_at));
+                ticketLayout.addItem( "Updated - " + formatDate(ticket.updated_at));
+                ticketLayout.addItem( "Location - " + ticket.location_id);
+                ticketLayout.addItem( ticket.problem_type + " - " + ticket.subject + "");
+                ticketLayout.addItem( "<b>Comments</b> <hr/>", function() {
+                    addComment.emit("update", ticket);
+                    addComment.next();
                 });
                 ticket.comments.reverse();
                 for (var i in ticket.comments) {
-                    ticketLayout.manager.emit("addItem", ticket.comments[i].tech + " - [<b>" + ticket.comments[i].subject + "</b>] - " + formatDate(ticket.created_at) + "<br/>" + ticket.comments[i].body.replace(/(?:\r\n|\r|\n)/g, '<br />'));
-                    //ticketLayout.manager.emit("addItem",ticket.comments[i].body);
-                    //ticketLayout.manager.emit("addItem", "<hr/>");
-                    ticketLayout.manager.emit("addDivider");
+                    ticketLayout.addItem( ticket.comments[i].tech + " - [<b>" + ticket.comments[i].subject + "</b>] - " + formatDate(ticket.created_at) + "<br/>" + ticket.comments[i].body.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+                    //ticketLayout.addItem(ticket.comments[i].body);
+                    //ticketLayout.addItem( "<hr/>");
+                    ticketLayout.addDivider();
 
 
                 }
-                ticketLayout.manager.emit("setup");
+                ticketLayout.setup();
             }
         });
 
-        ticketLayout.manager.on("show", function(ticket) {
+        ticketLayout.on("show", function(ticket) {
             //alert(ticket.number);
         });
 
 
         /****  ****/
 
-        var ticketsList = factory.createList("tickets");
-
-        ticketsList.manager.on("addParent", function(Parent) {
-            ticketLayout.manager.parent(Parent);
-        });
+        var ticketsList = factory.createList("tickets",imports.mainLayout.mainPage);
 
         function loadCustomer(ticket,done,fail,always){
              api.get("/customers/" + ticket.customer_id, {
@@ -220,18 +204,18 @@ define(function() {
         }
 
         function ticketsList_OnTouch(ticket) {
-            //ticketsList.manager.parent().emit("loading");
+            //ticketsList.parent().emit("loading");
             //var item = ticketsList.itemData[ticketNumber];
 
             loadCustomer(ticket,function() {
-                    ticketLayout.manager.emit("update", ticket);
-                    ticketLayout.manager.show(ticket);
+                    ticketLayout.emit("update", ticket);
+                    ticketLayout.next();
                 },function(er) {
-                    ticketLayout.manager.emit("update", ticket);
-                    ticketLayout.manager.show(ticket);
+                    ticketLayout.emit("update", ticket);
+                    ticketLayout.next();
                     alert("failed to get customer data");
                 },function() {
-                    //ticketsList.manager.parent().emit("doneLoading");
+                    //ticketsList.parent().emit("doneLoading");
                 });
         }
 
@@ -243,26 +227,26 @@ define(function() {
         })();
 
 
-        var ticketSearch = ticketsList.manager.searchable(function(val, done){
+        var ticketSearch = ticketsList.searchable(function(val, done){
            if(val == ""){
-               ticketsList.manager.emit("clear");
+               ticketsList.clear();
               getTicketsList(function(data){
-                    ticketsList.manager.emit("update", data.tickets);
+                    ticketsList.emit("update", data.tickets);
                     done();
                 });
               return;
             }
-            ticketsList.manager.emit("clear");
+            ticketsList.clear();
             api.get("/tickets", {
               number: val
             }, function(data) {
-              ticketsList.manager.emit("update", data.tickets);
+              ticketsList.emit("update", data.tickets);
             }, function() {
                 //api errors,,  youknow somthing thats not statusCode 200
             }, done);
         });
 
-        ticketsList.manager.on("update", function(tickets,hideSearch) {
+        ticketsList.on("update", function(tickets,hideSearch) {
             if(hideSearch)
                 ticketSearch.hide();
             else
@@ -292,7 +276,7 @@ define(function() {
                 var htmlBody = "";
                 htmlBody += ticket.problem_type + " - " + formatDate(ticket.updated_at);
                 //ticketsList.AddItem(ticket.number + " - [" + ticket.status + "] " + ticket.subject + "", htmlBody);
-                ticketsList.manager.emit("addItem", "<b>" + ticket.number + " - [" + ticket.status + "] " +
+                ticketsList.addItem( "<b>" + ticket.number + " - [" + ticket.status + "] " +
                                                         ticket.customer_business_then_name + "</b> <span style='float: right;font-weight: bold;'>"+
                                                                 ticket.subject+"</span><br>" + htmlBody,
                     ticketsList_OnTouch.bind({}, ticket),false,false,(function(ticket){
@@ -325,19 +309,19 @@ define(function() {
                     })(ticket));
             }
 
-            ticketsList.manager.emit("setup");
+            ticketsList.setup();
         });
 
-        ticketsList.manager.on("show", function(keepData,customer_id,hideSearch) {
+        ticketsList.on("show", function(keepData,customer_id,hideSearch) {
             //if(!keepData){
-                ticketsList.manager.emit("clear");
-                //ticketsList.manager.parent().emit("loading");
+                ticketsList.clear();
+                //ticketsList.parent().emit("loading");
 
                 getTicketsList(customer_id,function(data){
 
-                    //ticketsList.manager.parent().emit("doneLoading");
+                    //ticketsList.parent().emit("doneLoading");
 
-                    ticketsList.manager.emit("update", data.tickets, hideSearch);
+                    ticketsList.emit("update", data.tickets, hideSearch);
 
                 });
             //}
@@ -363,10 +347,10 @@ define(function() {
         }
 
 
-        imports.mainLayout.startList.manager.emit("addItem",function(){
+        imports.mainLayout.startList.addItem(function(){
             return "Tickets";
         },function(){
-            ticketsList.manager.show();
+            ticketsList.next();
         },true);
 
 

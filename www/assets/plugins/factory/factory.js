@@ -1,276 +1,312 @@
+"use strict";
 /* globals app*/
-define(["events"], function(events) {
-    var EventEmitter = events.EventEmitter;
+define( function(events) {
 
     plugin.provides = ["factory"];
+    plugin.consumes = ["events"];
 
     return plugin;
 
     function plugin(options, imports, register) {
 
-        function parentAble(child){
-            return function(Parent) {
-                if(Parent && !child.manager.getParent){
-                    if(child.manager && child.manager.id)
-                        Parent.emit("addChild", child.manager.id, child);
+        var EventEmitter = imports.events.EventEmitter;
 
-                    child.manager.emit("addParent", Parent);
-                    child.manager.getParent = function(){
-                        return Parent;
-                    }
-                }
-                return child.manager.getParent();
-            };
-        }
+        var PageManager = (function(){
 
-        var CreateList = function(id, listView) {
+            var PageManager = function (id, element) { //renamed arg for readability
+                var self = this;
+                this.defaultOptions = {};
 
-            var parent;
-            var itemsList = [];
-            var listEvents = new EventEmitter();
+                this.element = (id instanceof $) ? id : $(id);
+                this.pages = {};
 
-            listEvents.id = id;
-            listView.manager = listEvents;
-            listEvents.parent = parentAble(listView);
-
-            listEvents.on("addParent",function(Parrent){
-                parent = Parrent;
-            });
-
-            listEvents.on("setup", function() {
-                listEvents.emit("clear",true);
-                //listView.html("");
-                for (var i = 0; i < itemsList.length; i++) {
-                    itemsList[i]();
-                }
-                listView.listview('refresh');
-            });
-
-            listEvents.on("addItem", function(itemName, onClick, setup,perm,parsed) {
-                var itemNameFn = function() {
-                        if (typeof itemName == "function")
-                            return itemName();
-                        else return itemName;
-                    };
-                itemsList.push(function() {
-                    var body = $("<p/>");
-                    body.css("text-overflow" , "initial");
-                    body.css("overflow" , "initial");
-                    body.css("white-space" , "initial");
-
-                    var data = itemNameFn();
-                    if(typeof data == "object")
-                        body.append(data);
-                    else
-                        body.html(data);
-                    var li =$("<li/>",{
-                        perm:(perm ? "true" : "false"),
-                        "data-icon":(onClick ? undefined : false)
-                    }).append($("<a/>").click(onClick).click(function(){listEvents.emit("itemClick",li)}).html(body));
-
-                    if(parsed)
-                        parsed(li);
-                    listView.append(li);
+                var currentView = null;
+                Object.defineProperty(self, "currentView", {
+                  get: function() {return currentView }
+                  //, set: function() { }
                 });
-                if(setup)
-                    listEvents.emit("setup");
-            });
+                this.order = [];
 
-            listEvents.on("addDivider", function() {
 
-                itemsList.push(function() {
-                    var li =$("<li/>",{
-                        "data-role":"list-divider"
+                this.reset =  function() {
+                    self.order = [];
+                    self.hidePages();
+                };
+
+                this.start =  function(id) {
+                    if(self.pages[id]){
+                        self.reset();
+                        currentView = false;
+                        self.next(id);
+                    }
+                };
+
+                this.next =  function(id) {
+                    if(id && id != currentView){
+                        if(currentView){
+                            self.order.push(currentView);
+                            self.pages[currentView].saveState(self.order.length);
+                            self.pages[currentView].hide(function(){
+                                currentView = id;
+                                //self.pages[currentView].emit("update",self.order.length);
+                                self.pages[currentView].show(null,"right");
+                            },"left");
+                        }else{
+                            currentView = id;
+                            //self.pages[currentView].emit("update",self.order.length);
+                            self.pages[currentView].show(null,"right");
+                        }
+                        return self.order.length;
+                    }
+                };
+
+                this.back =  function() {
+                    var id = self.order.pop();//last page off bottom
+                    if (!id) {
+                        //if (callback) callback(true);//isend
+                    }
+                    else {
+                        if(currentView){
+                            self.pages[currentView].hide(function(){
+                                currentView = id;
+                                self.pages[currentView].loadState(self.order.length+1);
+                                self.pages[currentView].show(null,"left");
+                            },"right");
+                        }else{
+                            currentView = id;
+                            self.pages[currentView].loadState(self.order.length+1);
+                            self.pages[currentView].show(null,"left");
+                        }
+                    }
+                };
+
+                this.hidePages =  function() {
+                    for(var i in self.pages)
+                        self.hidePage(i);
+                };
+
+                this.hidePage =  function(id) {
+                    self.pages[id].hide();
+                };
+
+
+                this.addPage =  function(child) {
+                    var id = child.element.attr("id");
+                    self.pages[id]= child;
+                    self.element.append(child.element);
+                };
+
+
+            };
+            $.extend(PageManager.prototype,EventEmitter.prototype);
+
+            return PageManager;
+        })();
+
+      var CreateList = (function(){
+
+            var CreateList = function (element,manager) { //renamed arg for readability
+                var self = this;
+                this.defaultOptions = {};
+
+                this.element = (element instanceof $) ? element : $("<ul/>",element);
+                this.element.listview({
+                    defaults: true
+                });
+                this.element.hide();
+
+                this.manager = manager;
+
+                this.children = [];
+
+                // this.effect = "blind";
+                // this.effect = "bounce";
+                // this.effect = "clip";
+                // this.effect = "drop";
+                // this.effect = "explode";
+                // this.effect = "fade";
+                // this.effect = "fold";
+                // this.effect = "highlight";
+                // this.effect = "puff";
+                // this.effect = "pulsate";
+                // this.effect = "shake";
+                // this.effect = "size";
+                this.effect = "slide";
+                // this.effect = "transfer";
+
+                this.effectOptions = {queue:false,duration:200};
+
+                this.show = function(cb,direction) {
+                    self.effectOptions.direction = direction;
+                    if(!self.effect)
+                        self.element.show(cb);
+                    else
+                        self.element.show(self.effect,self.effectOptions,cb);
+
+                    self.emit("show");
+                };
+
+                this.hide = function(cb,direction) {
+                    self.effectOptions.direction =direction;
+                    if(!self.effect)
+                        self.element.hide(cb);
+                    else self.element.hide(self.effect,self.effectOptions,cb);
+
+                    self.emit("hide");
+                };
+
+                var states = {};
+
+
+                this.saveState = function(id) {
+                    states[id] = self.children;
+                };
+                this.loadState = function(id) {
+                    self.children = states[id];
+                    self.setup();
+                };
+
+                this.next = function() {//shortcut to load itself
+                    self.manager.next(self.element.attr("id"));
+                };
+                this.back = function(state) {//shortcut to load itself
+                    self.manager.back();
+                };
+
+                this.start = function() {
+                    self.manager.start(self.element.attr("id"));
+                };
+
+                this.setup = function() {
+                    self.clear(true);
+                    //listView.html("");
+                    for (var i = 0; i < self.children.length; i++) {
+                        self.children[i]();
+                    }
+                    self.element.listview('refresh');
+                };
+
+                var listInited = false;
+
+                this.addItem = function(itemName, onClick, setup,perm,parsed) {
+                    if(!listInited){
+                        listInited = true;
+                        self.children = [];
+                    }
+                    var itemNameFn = function() {
+                            if (typeof itemName == "function")
+                                return itemName();
+                            else return itemName;
+                        };
+                    self.children.push(function() {
+                        var body = $("<p/>");
+                        body.css("text-overflow" , "initial");
+                        body.css("overflow" , "initial");
+                        body.css("white-space" , "initial");
+
+                        var data = itemNameFn();
+                        if(typeof data == "object")
+                            body.append(data);
+                        else
+                            body.html(data);
+                        var li =$("<li/>",{
+                            perm:(perm ? "true" : "false"),
+                            "data-icon":(onClick ? undefined : false)
+                        }).append($("<a/>").click(onClick).click(function(){self.emit("itemClick",li)}).html(body));
+
+                        if(parsed)
+                            parsed(li);
+                        self.element.append(li);
+                    });
+                    if(setup)
+                        self.setup();
+                };
+
+
+                this.addDivider = function() {
+
+                    self.children.push(function() {
+                        var li =$("<li/>",{
+                            "data-role":"list-divider"
+                        });
+
+                        self.element.append(li);
+                    });
+                };
+
+                this.clear = function(dontClean) {
+                    self.element.find('li:not([perm="true"])').remove();
+                    if(!dontClean)
+                        self.children = [];
+                };
+
+
+                this.searchable = function(doSearch){
+                    var searchForm = $("<form/>");
+                    searchForm.submit(function(e) {
+                      e.preventDefault();
+                    });
+                    var searchDiv = $("<div/>");
+                    //searchDiv.addClass("ui-input-search ui-shadow-inset ui-input-has-clear ui-body-a ui-corner-all");
+                    var searchInput = $("<input/>",{type:"search"});
+                    searchForm.append(searchDiv);
+                    searchDiv.append(searchInput);
+
+                    searchInput.textinput({
+                        //clearBtn: true,
+                        //clearBtnText: ""
                     });
 
-                    listView.append(li);
-                });
-            });
 
-            listEvents.on("clear", function(dontClean) {
-                listView.find('li:not([perm="true"])').remove();
-                if(!dontClean)
-                    itemsList = [];
-            });
-
-
-            listEvents.on("show", function() {
-                listView.show();
-            });
-
-
-            listEvents.show = function() {
-                var args = argsToArr(arguments);
-                args.unshift(listView.manager.id);
-                args.unshift("next");
-                if(parent)
-                parent.emit.apply(parent, args);
-            };
-
-            listEvents.start = function() {
-                var args = argsToArr(arguments);
-                args.unshift(listView.manager.id);
-                args.unshift("start");
-                if(parent)
-                parent.emit.apply(parent, args);
-            };
-
-            listEvents.searchable = function(doSearch){
-                var searchForm = $("<form/>");
-                searchForm.submit(function(e) {
-                  e.preventDefault();
-                });
-                var searchDiv = $("<div/>");
-                //searchDiv.addClass("ui-input-search ui-shadow-inset ui-input-has-clear ui-body-a ui-corner-all");
-                var searchInput = $("<input/>",{type:"search"});
-                searchForm.append(searchDiv);
-                searchDiv.append(searchInput);
-
-                searchInput.textinput({
-                    //clearBtn: true,
-                    //clearBtnText: ""
-                });
-
-
-                var renderedLI;
-                listEvents.emit("addItem", searchForm, false, true, true,function(LI){
-                    renderedLI = LI;
-                });
-                var updating = false;
-                var doAgain = false;
-                var doAlways = function() {
-                      updating = false;
-                      if (doAgain) {
-                        doAgain = false;
-                        doUpdate();
+                    var renderedLI;
+                    self.addItem(searchForm, false, true, true,function(LI){
+                        renderedLI = LI;
+                    });
+                    var updating = false;
+                    var doAgain = false;
+                    var doAlways = function() {
+                          updating = false;
+                          if (doAgain) {
+                            doAgain = false;
+                            doUpdate();
+                          }
+                        };
+                    var doUpdate = function() {
+                      if (!updating) {
+                        updating = true;
+                        doSearch(searchInput.val(),doAlways);
                       }
+                      else doAgain = true;
                     };
-                var doUpdate = function() {
-                  if (!updating) {
-                    updating = true;
-                    doSearch(searchInput.val(),doAlways);
-                  }
-                  else doAgain = true;
+
+                    searchInput.on("keyup", doUpdate);
+                    searchDiv.contents().find(".ui-input-clear").click(doUpdate);
+
+                    return {
+                        hide:function(){
+                            if(renderedLI) renderedLI.hide();
+                        },
+                        show:function(){
+                            if(renderedLI) renderedLI.show();
+                        },
+                        call:function(){
+                            doUpdate();
+                        }
+                    };
                 };
 
-                searchInput.on("keyup", doUpdate);
-                searchDiv.contents().find(".ui-input-clear").click(doUpdate);
 
-                return {
-                    hide:function(){
-                        if(renderedLI) renderedLI.hide();
-                    },
-                    show:function(){
-                        if(renderedLI) renderedLI.show();
-                    },
-                    call:function(){
-                        doUpdate();
-                    }
-                };
+                this.addItem(this.element.attr("id") +" No Items");
+                listInited = false;
+                this.setup();
+                if(self.manager)
+                    self.manager.addPage(self);
             };
+            $.extend(CreateList.prototype,EventEmitter.prototype);
 
-            return listEvents;
-        };
+            return CreateList;
+        })();
 
-
-        var ManageContainer = function(id, layout) {
-
-            var layoutChildren = {};
-
-            var layoutEvents = new EventEmitter();
-            layoutEvents.id = id;
-            layout.manager = layoutEvents;
-
-            layoutEvents.parent = parentAble(layout);
-
-            layoutEvents.on("addChild", function(id, child) {
-                layout.append(child);
-                layoutChildren[id] = child;
-                child.hide();
-
-                if (child.manager) {
-                    child.manager.emit("add", layout);
-                }
-            });
-
-            layoutEvents.on("hideChildren", function() {
-                for (var i in layoutChildren) {
-                    layoutEvents.emit("hideChild", i);
-                }
-            });
-
-            layoutEvents.on("hideChild", function() {
-                var args = argsToArr(arguments);
-                var id = args.shift();
-                args.unshift("hide");
-                if (layoutChildren[id]) {
-                    layoutChildren[id].hide();
-
-                    if (layoutChildren[id].manager)
-                        layoutChildren[id].manager.emit.apply(layoutChildren[id].manager, args);
-                }
-            });
-
-
-            layoutEvents.on("showChild", function() {
-                var args = argsToArr(arguments);
-                var id = args.shift();
-                args.unshift("show");
-                var child = layoutChildren[id];
-                if (child) {
-                    child.show();
-                    if (child.manager)
-                        child.manager.emit.apply(layoutChildren[id].manager, args);
-                }
-            });
-
-        };
-
-
-        var ManagePage = function(id, layout) {
-            //inherits ManageContainer
-            var currentView = null;
-            var viewOrder = [];
-
-            var layoutEvents = layout.manager;
-
-            layoutEvents.on("start", function(id) {
-                layoutEvents.emit("reset");
-                layoutEvents.emit("showChild", id);
-                currentView = id;
-            });
-
-            layoutEvents.on("back", function(callback) {
-                var id = viewOrder.pop();
-                if (!id) {
-                    if (callback) callback(true);
-                }
-                else {
-                    currentView = false;
-                    layoutEvents.emit("next", id, true);
-                }
-            });
-
-            layoutEvents.on("next", function(id) {
-                if (currentView)
-                    viewOrder.push(currentView);
-                currentView = id;
-                layoutEvents.emit("hideChildren");
-
-
-                var args = argsToArr(arguments);
-                args.unshift("showChild");
-                layoutEvents.emit.apply(layoutEvents, args);
-            });
-
-
-            layoutEvents.on("reset", function() {
-                currentView = null;
-                viewOrder = [];
-                layoutEvents.emit("hideChildren");
-            });
-
-        };
 
         function argsToArr(args) {
             var arr = [];
@@ -283,26 +319,12 @@ define(["events"], function(events) {
         register(null, {
             factory: {
                 managePage: function(container) {
-                    var $container = $(container);
-                    ManageContainer(container, $container);
-                    ManagePage(container, $container);
-                    return $container;
+                    return new PageManager(container);
                 },
-                createList: function(id,data,theme) {
-                    if(typeof data == "object"){
-                        data.id = id;
-                    }else data = {id:id};
-                    var listView = $("<ul/>",data);
-
-                    listView.listview({
-                        defaults: true,
-                        theme:theme?theme:"a",
-                        dividerTheme: theme?theme:"a",
-                    });
-
-                    listView.manager = CreateList(id, listView);
-
-                    return listView;
+                createList: function(data,manager) {
+                    if(typeof data == "string")
+                        data = {id:data};
+                    return new CreateList(data, manager);
                 }
             }
         });

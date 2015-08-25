@@ -38,17 +38,17 @@ define(function () {
 
         pluginEvents.on("get",pluginEvents.get);
 
-        var settingsList = imports.factory.createList("settingsList");
+        var settingsList = imports.factory.createList({id:"settingsList"},imports.mainLayout.mainPage);
 
-        settingsList.manager.parent(imports.mainLayout.mainPage.manager);
+        //settingsList.manager.parent(imports.mainLayout.mainPage.manager);
 
         settingsList.on("show",function(){
-            settingsList.manager.emit("setup");
+            settingsList.setup();
         });
 
         pluginEvents.addSetting = function(settingName,settingAbbr,editable){
             //add location id to settings panel
-            settingsList.manager.emit("addItem",function(){
+            settingsList.addItem(function(){
                 return settingAbbr+" - "+pluginEvents.get(settingName);
             },(editable ? function() {
                 var mewLocation = prompt( "Set "+settingAbbr+":",pluginEvents.get(settingName));
@@ -63,14 +63,12 @@ define(function () {
                 if(arg) return pluginEvents.set(settingName,arg);
                 else return pluginEvents.get(settingName);
 
-            }
+            };
         };
 
-
         //add settings item to main layout
-        imports.mainLayout.startPanel.manager.emit("addItem","Settings",function() {
-            settingsList.manager.emit("setup");
-            settingsList.manager.show();
+        imports.mainLayout.startPanel.addItem("Settings",function() {
+            settingsList.next();
         },true);
 
         (function() {

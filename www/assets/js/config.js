@@ -6,13 +6,18 @@ define(["architect"], function(architect) {
         "plugins/main/layout",
         "plugins/factory/factory",
         "plugins/events/events",
+        "plugins/phonegap/phonegap",
         "plugins/settings/settings",
         "plugins/user/user",
-        "plugins/tickets/tickets",
+
+        "plugins/tools/tools",
+        "plugins/api/api",
+
         "plugins/customers/customers",
         "plugins/customers/customer_assets",
-        "plugins/api/api",
-        "plugins/tools/tools",
+
+        "plugins/tickets/tickets",
+
 
         //"plugins/appointments/appointments",
         //"plugins/invoices/invoices",
